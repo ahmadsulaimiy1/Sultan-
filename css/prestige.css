@@ -2069,6 +2069,15 @@
 .gateway-card:hover{transform:translateY(-7px);border-color:rgba(var(--lv-gbs,233,206,138),.45);
   box-shadow:0 4px 8px rgba(0,0,0,.35),0 34px 66px -28px rgba(0,0,0,.9),
              0 0 40px -10px rgba(var(--lv-gbs,233,206,138),.45),inset 0 1px 0 rgba(var(--lv-gbs,233,206,138),.3);}
+/* The travelling gold light (.rg-light, css/regalia.css) is otherwise
+   hover/focus-only — invisible on a page most people scan rather than
+   point at one card at a time. Each of the eight doors gets a restrained
+   always-on arc instead, brightening further on hover, so the "living
+   metal" reads at a glance rather than only on interaction. */
+.gateway-card.rg-light::before{opacity:.55;}
+.gateway-card.rg-light:hover::before,
+.gateway-card.rg-light:focus-within::before{opacity:1;}
+@media (prefers-reduced-motion:reduce){.gateway-card.rg-light::before{opacity:.35;}}
 .gateway-card-icon{
   width:56px;height:56px;border-radius:var(--pr-r-md);display:grid;place-items:center;
   background:linear-gradient(140deg,rgba(var(--lv-gbs,233,206,138),.22),rgba(var(--lv-gs,198,161,91),.06));

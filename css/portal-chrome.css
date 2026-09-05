@@ -46,8 +46,8 @@
    ------------------------------------------------------------------- */
 .pch-strip{
   position:relative;isolation:isolate;
-  background:linear-gradient(180deg,var(--ivory-bg) 0%,var(--portal-card) 100%);
-  border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,var(--pearl) 0%,var(--pearl-2) 100%);
+  border-bottom:1px solid var(--pearl-line);
   padding:0 28px;}
 .pch-strip::after{
   content:"";position:absolute;inset-inline:0;bottom:0;height:1px;pointer-events:none;
@@ -60,20 +60,20 @@
 .pch-strip-item{
   display:inline-flex;align-items:center;gap:7px;min-width:0;
   font-size:.72rem;letter-spacing:.02em;line-height:1;
-  color:var(--ink-soft);}
+  color:var(--pearl-ink-2);}
 .pch-strip-icon{flex:0 0 auto;opacity:.7;color:var(--gold-bright,var(--gold));}
 .pch-strip-time{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;}
 .pch-strip-sep{
   flex:0 0 auto;width:1px;height:12px;
-  background:linear-gradient(180deg,transparent,var(--line),transparent);}
+  background:linear-gradient(180deg,transparent,var(--pearl-line),transparent);}
 .pch-strip-link{
-  text-decoration:none;position:relative;padding-bottom:2px;color:var(--ink-soft);
+  text-decoration:none;position:relative;padding-bottom:2px;color:var(--pearl-ink-2);
   transition:color .3s ease;}
 .pch-strip-link::after{
   content:"";position:absolute;inset-inline-start:0;bottom:0;height:1px;width:100%;
   background:var(--gold-bright,var(--gold));transform:scaleX(0);transform-origin:inline-start;
   transition:transform .38s cubic-bezier(.16,.8,.24,1);}
-.pch-strip-link:hover,.pch-strip-link:focus-visible{color:var(--portal-heading);}
+.pch-strip-link:hover,.pch-strip-link:focus-visible{color:rgb(var(--lv-gt2,138,106,47));}
 .pch-strip-link:hover::after,.pch-strip-link:focus-visible::after{transform:scaleX(1);}
 @media (max-width:620px){
   .pch-strip{padding:0 14px;}
@@ -115,8 +115,8 @@ html[data-pc-theme="royal"] .pch-strip-link:focus-visible{color:#FFF6DF;}
   position:relative;isolation:isolate;
   background:
     radial-gradient(700px 160px at 50% -60%,rgba(var(--lv-gbs,233,206,138),.14),transparent 74%),
-    linear-gradient(168deg,var(--ivory-bg) 0%,var(--portal-card) 100%)!important;
-  border-bottom:1px solid var(--line)!important;
+    linear-gradient(168deg,var(--pearl) 0%,var(--pearl-2) 100%)!important;
+  border-bottom:1px solid var(--pearl-line)!important;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.7),
              0 14px 30px -26px rgba(60,40,20,.22)!important;
   padding:0!important;}
@@ -163,7 +163,7 @@ html[data-pc-theme="royal"] .portal-topbar{
 .pch-mast > .pch-utility{
   order:9;flex:0 0 100%;display:flex;align-items:center;flex-wrap:wrap;
   gap:9px 12px;padding:9px 28px;margin:0;
-  border-top:1px solid var(--line);
+  border-top:1px solid var(--pearl-line);
   background:linear-gradient(180deg,rgba(var(--lv-gs,198,161,91),.06),rgba(var(--lv-gs,198,161,91),0));}
 /* The account controls sit at the far end, away from the navigation. */
 .pch-mast > .pch-utility > .lang-switch-mount{margin-inline-start:auto;}
@@ -171,27 +171,27 @@ html[data-pc-theme="royal"] .portal-topbar{
 /* Bare links beside pills is what made this read as unfinished. Every control
    on the working tier is a plate now, at one weight, with one rhythm. */
 .pch-mast .portal-topbar-link{
-  font-family:var(--font-label,'Cinzel',serif);font-size:.62rem;letter-spacing:.13em;
-  text-transform:uppercase;text-decoration:none;padding:7px 13px;border-radius:99px;
-  border:1px solid var(--line);color:var(--ink-soft);
+  font-family:var(--font-label,'Cinzel',serif);font-size:.76rem;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;text-decoration:none;padding:10px 18px;border-radius:99px;
+  border:1px solid var(--pearl-line);color:var(--pearl-ink-2);
   background:linear-gradient(168deg,rgba(var(--lv-gs,198,161,91),.09),rgba(var(--lv-gs,198,161,91),.02));
   box-shadow:inset 0 1px 0 rgba(255,255,255,.5);
   transition:border-color .3s ease,background .3s ease,color .3s ease,transform .3s ease;}
 .pch-mast .portal-topbar-link:hover,
 .pch-mast .portal-topbar-link:focus-visible{
   border-color:var(--gold);background:rgba(var(--lv-gs,198,161,91),.16);
-  color:var(--portal-heading)!important;transform:translateY(-1px);}
+  color:rgb(var(--lv-gt2,138,106,47))!important;transform:translateY(-1px);}
 .pch-mast .portal-pilot-badge{
-  font-family:var(--font-label,'Cinzel',serif);font-size:.6rem;letter-spacing:.15em;
-  text-transform:uppercase;padding:7px 14px;border-radius:99px;
+  font-family:var(--font-label,'Cinzel',serif);font-size:.72rem;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;padding:10px 19px;border-radius:99px;
   color:#1A1006!important;
   background:linear-gradient(135deg,var(--gold-bright),var(--gold))!important;
   border:1px solid rgba(255,255,255,.6)!important;
   box-shadow:0 6px 14px -8px rgba(140,100,40,.35),inset 0 1px 0 rgba(255,255,255,.4);}
 .pch-mast > .portal-topbar-calendar{
-  font-family:var(--font-label,'Cinzel',serif);font-size:.62rem;letter-spacing:.13em;
-  text-transform:uppercase;padding:7px 14px;border-radius:99px;
-  border:1px solid var(--line);color:var(--ink-soft);
+  font-family:var(--font-label,'Cinzel',serif);font-size:.76rem;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;padding:10px 19px;border-radius:99px;
+  border:1px solid var(--pearl-line);color:var(--pearl-ink-2);
   background:linear-gradient(168deg,rgba(var(--lv-gs,198,161,91),.10),rgba(var(--lv-gs,198,161,91),.02));}
 @media (max-width:820px){
   .pch-mast > .portal-brand{padding-inline:16px;}
@@ -252,13 +252,34 @@ html[data-pc-theme="royal"] .portal-topbar::after{
 .portal-brand img{
   width:40px!important;height:40px!important;
   filter:drop-shadow(0 1px 3px rgba(0,0,0,.55));}
+/* A travelling metallic-gold arc around the crest ring — the same
+   conic-gradient-perimeter-light technique css/regalia.css uses for the
+   gateway cards (.rg-light), restated here under its own name/property
+   so this file has no new stylesheet dependency across ~74 pages. One
+   bright arc drifts slowly around the ring, never a pulse or a glow —
+   the "3D, premium" accent asked for, at the one weight a working
+   header can carry without becoming a marquee. */
+@property --pch-angle{syntax:'<angle>';initial-value:0deg;inherits:false;}
+.portal-brand .crest-shimmer-wrap{position:relative;isolation:isolate;border-radius:50%;}
+.portal-brand .crest-shimmer-wrap::before{
+  content:"";position:absolute;inset:-3px;z-index:-1;border-radius:50%;
+  background:conic-gradient(from var(--pch-angle),
+    transparent 0deg 200deg,
+    rgba(var(--lv-g,198,161,91),.4) 236deg,
+    rgb(var(--lv-gb,233,206,138)) 256deg,
+    rgba(var(--lv-g,198,161,91),.4) 276deg,
+    transparent 312deg 360deg);
+  animation:pch-orbit 6s linear infinite;}
+@keyframes pch-orbit{to{--pch-angle:360deg;}}
+@media (prefers-reduced-motion:reduce){.portal-brand .crest-shimmer-wrap::before{animation:none;}}
+html[data-pc-motion="reduced"] .portal-brand .crest-shimmer-wrap::before{animation:none;}
 .portal-brand .brand-text{display:block;line-height:1.12;}
 /* Cinzel at the masthead's weight. The single span this replaced was set
    from css/portal.css at .92rem with wide tracking; .line1 carries its own
    size and the shimmer, and only needs the face named for the portal's
    shorter bar. */
 .portal-brand .line1{
-  font-size:1rem!important;letter-spacing:.05em!important;text-transform:uppercase!important;}
+  font-size:1.15rem!important;font-weight:700!important;letter-spacing:.04em!important;text-transform:uppercase!important;}
 
 /* THE WORDMARK IS ON ESPRESSO. IN EVERY EDITION. THE SIXTH TIME.
    The wordmark is not coloured type: it is a gradient clipped to the glyphs
@@ -323,11 +344,11 @@ html[data-pc-theme="royal"] .portal-brand .line1{
 /* Before the lockup existed the bar's only text was this one span, so it was
    inked here. Anything still arriving as a bare span in the bar — a page that
    brings its own — keeps that ink. */
-.portal-brand > span:not(.brand-text):not(.crest-shimmer-wrap){color:var(--ink)!important;}
-.portal-topbar-link{color:var(--ink-soft)!important;}
-.portal-topbar-link:hover{color:var(--portal-heading)!important;}
+.portal-brand > span:not(.brand-text):not(.crest-shimmer-wrap){color:var(--pearl-ink)!important;}
+.portal-topbar-link{color:var(--pearl-ink-2)!important;}
+.portal-topbar-link:hover{color:rgb(var(--lv-gt2,138,106,47))!important;}
 .portal-logout{
-  border:1px solid var(--line)!important;
+  border:1px solid var(--pearl-line)!important;
   background:linear-gradient(150deg,rgba(var(--lv-gs,198,161,91),.16),rgba(var(--lv-gs,198,161,91),.06))!important;
   color:rgb(var(--lv-gt2,138,106,47))!important;border-radius:99px!important;
   transition:background .35s ease,border-color .35s ease,color .35s ease;}
@@ -356,7 +377,7 @@ html[data-pc-theme="royal"] .portal-logout:hover{
 /* The standing line, folded away where the bar is tight. */
 .pch-standing{
   display:none;align-items:center;gap:12px;margin-inline:auto;
-  font-family:var(--font-label,'Cinzel',serif);font-size:.6rem;letter-spacing:.22em;
+  font-family:var(--font-label,'Cinzel',serif);font-size:.7rem;font-weight:600;letter-spacing:.2em;
   text-transform:uppercase;white-space:nowrap;color:rgb(var(--lv-gt2,138,106,47));}
 @media (min-width:1080px){.pch-standing{display:flex;}}
 .pch-standing::before,.pch-standing::after{
@@ -391,8 +412,8 @@ html[data-pc-theme="royal"] .pch-standing-d{color:rgba(198,161,91,.8);}
 .pch-foot{
   position:relative;isolation:isolate;margin-top:auto;
   padding:34px 28px 26px;
-  background:linear-gradient(168deg,var(--ivory-bg) 0%,var(--portal-card) 100%);
-  border-top:1px solid var(--line);
+  background:linear-gradient(168deg,var(--pearl) 0%,var(--pearl-2) 100%);
+  border-top:1px solid var(--pearl-line);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.6);}
 .pch-foot::before{
   content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.03;
@@ -405,7 +426,7 @@ html[data-pc-theme="royal"] .pch-standing-d{color:rgba(198,161,91,.8);}
 .pch-arrival{
   position:relative;max-width:1180px;margin:0 auto 30px;
   padding:34px 44px 30px;text-align:center;
-  border:1px solid var(--line);border-radius:3px;
+  border:1px solid var(--pearl-line);border-radius:3px;
   background:
     radial-gradient(560px 180px at 50% 0%,rgba(var(--lv-gs,198,161,91),.14),transparent 72%),
     linear-gradient(168deg,rgba(255,255,255,.68),rgba(var(--lv-gs,198,161,91),.12));
@@ -419,7 +440,7 @@ html[data-pc-theme="royal"] .pch-standing-d{color:rgba(198,161,91,.8);}
 .pch-statement{
   margin:0;font-family:var(--font-display,'Cormorant Garamond',Georgia,serif);
   font-size:clamp(1.05rem,2.2vw,1.42rem);font-style:italic;line-height:1.5;
-  color:var(--ink);text-wrap:balance;}
+  color:var(--pearl-ink);text-wrap:balance;}
 .pch-mark{
   margin:16px auto 0;width:20px;height:20px;color:rgb(var(--lv-gt2,138,106,47));}
 .pch-mark svg{width:100%;height:100%;display:block;}
@@ -463,26 +484,26 @@ html[data-pc-theme="royal"] .pch-mark{color:rgba(233,206,138,.75);}
 .pch-now{
   position:relative;max-width:1180px;margin:0 auto 30px;
   padding:24px 30px;border-radius:3px;
-  border:1px solid var(--line);
+  border:1px solid var(--pearl-line);
   background:linear-gradient(168deg,rgba(255,255,255,.7),rgba(var(--lv-gs,198,161,91),.08));}
 .pch-now-head{
   display:flex;align-items:baseline;justify-content:space-between;
   flex-wrap:wrap;gap:4px 20px;margin-bottom:18px;
-  padding-bottom:12px;border-bottom:1px solid var(--line);}
+  padding-bottom:12px;border-bottom:1px solid var(--pearl-line);}
 .pch-now-eyebrow{
   margin:0;font-family:var(--font-label,'Cinzel',serif);font-size:.68rem;
-  letter-spacing:.19em;text-transform:uppercase;color:var(--portal-heading);}
-.pch-now-place{margin:0;font-size:.71rem;color:var(--ink-soft);}
+  letter-spacing:.19em;text-transform:uppercase;color:rgb(var(--lv-gt2,138,106,47));}
+.pch-now-place{margin:0;font-size:.71rem;color:var(--pearl-ink-2);}
 .pch-now-grid{
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 34px;}
 .pch-now-cell{display:flex;flex-direction:column;gap:5px;min-width:0;}
 .pch-now-k{
   font-family:var(--font-label,'Cinzel',serif);font-size:.58rem;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--ink-soft);}
+  text-transform:uppercase;color:var(--pearl-ink-2);}
 .pch-now-clock,.pch-now-hours{
-  font-size:1.14rem;color:var(--ink);letter-spacing:.02em;
+  font-size:1.14rem;color:var(--pearl-ink);letter-spacing:.02em;
   font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;}
-.pch-now-state{display:inline-flex;align-items:center;gap:9px;font-size:1.14rem;color:var(--ink);}
+.pch-now-state{display:inline-flex;align-items:center;gap:9px;font-size:1.14rem;color:var(--pearl-ink);}
 .pch-now-dot{
   width:9px;height:9px;border-radius:50%;flex:0 0 auto;
   background:rgba(var(--lv-gs,198,161,91),.4);box-shadow:0 0 0 0 rgba(0,0,0,0);}
@@ -490,11 +511,11 @@ html[data-pc-theme="royal"] .pch-mark{color:rgba(233,206,138,.75);}
   background:#3E9B5C;box-shadow:0 0 10px 1px rgba(62,155,92,.4);}
 [data-now-state="closed"] .pch-now-dot{
   background:#B4623A;box-shadow:0 0 10px 1px rgba(180,98,58,.35);}
-.pch-now-sub{font-size:.73rem;color:var(--ink-soft);}
-.pch-now-link{color:var(--portal-heading);text-decoration:none;
-  border-bottom:1px solid var(--line);padding-bottom:1px;
+.pch-now-sub{font-size:.73rem;color:var(--pearl-ink-2);}
+.pch-now-link{color:rgb(var(--lv-gt2,138,106,47));text-decoration:none;
+  border-bottom:1px solid var(--pearl-line);padding-bottom:1px;
   transition:color .3s ease,border-color .3s ease;}
-.pch-now-link:hover,.pch-now-link:focus-visible{color:var(--ink);border-color:var(--gold);}
+.pch-now-link:hover,.pch-now-link:focus-visible{color:var(--pearl-ink);border-color:var(--gold);}
 @media (max-width:820px){
   .pch-now-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
 }
@@ -556,17 +577,17 @@ html[data-pc-theme="royal"] .pch-now-link:focus-visible{color:#FFF6DF;border-col
 .pch-crest{grid-row:1 / span 2;width:46px;height:46px;
   filter:drop-shadow(0 0 12px rgba(233,206,138,.35));}
 .pch-foot-name{
-  align-self:end;font-family:var(--font-label,'Cinzel',serif);font-size:.92rem;
-  letter-spacing:.05em;color:var(--ink);}
-.pch-foot-sig{align-self:start;font-size:.72rem;color:var(--ink-soft);}
+  align-self:end;font-family:var(--font-label,'Cinzel',serif);font-size:1.05rem;font-weight:700;
+  letter-spacing:.04em;color:var(--pearl-ink);}
+.pch-foot-sig{align-self:start;font-size:.8rem;color:var(--pearl-ink-2);}
 .pch-col-brand .pch-note{grid-column:1 / -1;margin:14px 0 0;}
 
 /* The heading treatment the site footer uses: small Cinzel gold, over a rule
    that runs the width of the column. */
 .pch-h{
-  font-family:var(--font-label,'Cinzel',serif);font-size:.66rem;font-weight:600;
-  letter-spacing:.17em;text-transform:uppercase;color:var(--portal-heading);
-  margin:0 0 12px;padding-bottom:9px;position:relative;overflow:hidden;}
+  font-family:var(--font-label,'Cinzel',serif);font-size:.78rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:rgb(var(--lv-gt2,138,106,47));
+  margin:0 0 14px;padding-bottom:10px;position:relative;overflow:hidden;}
 .pch-h::after{
   content:"";position:absolute;inset-inline:0;bottom:0;height:1px;
   background:linear-gradient(90deg,var(--gold),rgba(var(--lv-gs,198,161,91),.15));}
@@ -591,14 +612,14 @@ html[data-pc-theme="royal"] .pch-now-link:focus-visible{color:#FFF6DF;border-col
    arrives on hover from the leading edge, which is what the site's own
    navigation does. */
 .pch-link{
-  position:relative;width:fit-content;font-size:.8rem;text-decoration:none;
-  color:var(--ink-soft);padding-bottom:2px;
+  position:relative;width:fit-content;font-size:.94rem;font-weight:500;text-decoration:none;
+  color:var(--pearl-ink-2);padding-bottom:2px;
   transition:color .3s ease,transform .3s ease;}
 .pch-link::after{
   content:"";position:absolute;inset-inline-start:0;bottom:0;height:1px;width:100%;
   background:var(--gold-bright,var(--gold));transform:scaleX(0);transform-origin:inline-start;
   transition:transform .38s cubic-bezier(.16,.8,.24,1);}
-.pch-link:hover,.pch-link:focus-visible{color:var(--portal-heading);}
+.pch-link:hover,.pch-link:focus-visible{color:rgb(var(--lv-gt2,138,106,47));}
 .pch-link:hover::after,.pch-link:focus-visible::after{transform:scaleX(1);}
 
 .pch-rule{
@@ -610,18 +631,18 @@ html[data-pc-theme="royal"] .pch-now-link:focus-visible{color:#FFF6DF;border-col
   justify-content:space-between;gap:14px 26px;flex-wrap:wrap;}
 .pch-meta{
   display:flex;flex-wrap:wrap;gap:4px 20px;
-  font-size:.71rem;color:var(--ink-soft);}
+  font-size:.8rem;color:var(--pearl-ink-2);}
 .pch-meta a{color:inherit;}
 /* A seal, not a dashed placeholder box. */
 .pch-badge{
-  font-family:var(--font-label,'Cinzel',serif);font-size:.58rem;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--portal-heading);white-space:nowrap;
-  padding:8px 16px;border-radius:99px;
-  border:1px solid var(--line);
+  font-family:var(--font-label,'Cinzel',serif);font-size:.66rem;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:rgb(var(--lv-gt2,138,106,47));white-space:nowrap;
+  padding:9px 18px;border-radius:99px;
+  border:1px solid var(--pearl-line);
   background:linear-gradient(168deg,rgba(var(--lv-gs,198,161,91),.10),rgba(var(--lv-gs,198,161,91),.02));
   box-shadow:inset 0 1px 0 rgba(255,255,255,.5);}
 .pch-note{
-  margin:0;font-size:.71rem;line-height:1.62;color:var(--ink-soft);}
+  margin:0;font-size:.8rem;line-height:1.62;color:var(--pearl-ink-2);}
 
 /* ---- Dark/Royal theme: the original espresso colophon, unchanged --- */
 html[data-pc-theme="dark"] .pch-foot-name,
@@ -710,24 +731,24 @@ html[data-pc-motion="reduced"] .portal-topbar::after{animation:none;transform:sc
 .portal-topbar .portal-theme-toggle{
   width:34px;height:34px;
   background:linear-gradient(168deg,rgba(var(--lv-gs,198,161,91),.11),rgba(var(--lv-gs,198,161,91),.02))!important;
-  border:1px solid var(--line)!important;
+  border:1px solid var(--pearl-line)!important;
   color:rgb(var(--lv-gt2,138,106,47))!important;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.5);}
 .portal-topbar .portal-theme-toggle:hover,
 .portal-topbar .portal-theme-toggle:focus-visible{
   background:rgba(var(--lv-gs,198,161,91),.18)!important;
-  border-color:var(--gold)!important;color:var(--portal-heading)!important;}
+  border-color:var(--gold)!important;color:rgb(var(--lv-gt2,138,106,47))!important;}
 
 .portal-topbar-calendar{
-  color:rgb(var(--lv-gt2,138,106,47))!important;border-color:var(--line)!important;
+  color:rgb(var(--lv-gt2,138,106,47))!important;border-color:var(--pearl-line)!important;
   border-radius:99px;}
 .portal-topbar-calendar:hover{
-  color:var(--portal-heading)!important;border-color:var(--gold)!important;
+  color:rgb(var(--lv-gt2,138,106,47))!important;border-color:var(--gold)!important;
   background:rgba(var(--lv-gs,198,161,91),.12);}
 .portal-topbar .lang-switch > summary{
-  color:rgb(var(--lv-gt2,138,106,47))!important;border-color:var(--line)!important;}
+  color:rgb(var(--lv-gt2,138,106,47))!important;border-color:var(--pearl-line)!important;}
 .portal-topbar .lang-switch > summary:hover{
-  color:var(--portal-heading)!important;border-color:var(--gold)!important;
+  color:rgb(var(--lv-gt2,138,106,47))!important;border-color:var(--gold)!important;
   background:rgba(var(--lv-gs,198,161,91),.12);}
 
 /* The chronometer takes a light-dial face by default, matching the bar;
