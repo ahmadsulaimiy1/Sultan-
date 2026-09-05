@@ -31,7 +31,7 @@
   var MAX_ATTACHMENT_CHARS = 6000;
   var MAX_ATTACHMENT_BYTES = 8 * 1024 * 1024;
   var WHATSAPP_NUMBER = '2348073747650';
-  var PREFS_KEY = 'shrsPersonalisation';
+  var PREFS_KEY = 'shrsPersonalisation_v2';
   var headSubEl = root.querySelector('.assistant-head-sub');
   var OFFICE_LABELS = {
     en: {

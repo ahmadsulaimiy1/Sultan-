@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      9f811e8767a97ea295a95ab85df8c557f4a6caad
-short       9f811e87
-branch      claude/remove-black-overlays
-subject     Merge pull request #33: Fix the photo "blur" complaint, and give the five schools their own colours
-built (UTC) 2026-09-03T07:22:52Z
-assets      shrs-pwa-6ef321faee
+commit      48e26f76acec831dd23fea69aee07f5184d9870c
+short       48e26f76
+branch      claude/true-white-header-footer
+subject     Merge pull request #34: Remove every remaining black overlay from photographs, site-wide
+built (UTC) 2026-09-04T17:00:38Z
+assets      shrs-pwa-c4d43793e2
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

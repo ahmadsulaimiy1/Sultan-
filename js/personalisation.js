@@ -1,5 +1,5 @@
 (function(){
-  var PREFS_KEY = 'shrsPersonalisation';
+  var PREFS_KEY = 'shrsPersonalisation_v2';
   var STRIP_LANG = document.documentElement.lang === 'ar' ? 'ar' : 'en';
 
   var DEFAULTS = {

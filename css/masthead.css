@@ -732,7 +732,7 @@ html[data-pc-theme="light"] .mnr-item,
 html[data-pc-theme="light"] .fd-item{
   background:
     linear-gradient(180deg,rgba(255,255,255,.85),transparent 40%),
-    linear-gradient(168deg,rgba(255,253,249,.96),rgba(247,238,223,.88) 62%,rgba(241,228,200,.9));
+    linear-gradient(168deg,#FFFFFF,#F7F7F8 62%,#F2F3F5 100%);
   border-color:rgba(var(--lv-g,198,161,91),.52);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.9),
              0 1px 2px rgba(var(--lv-cf,59,42,29),.06);}
@@ -1171,6 +1171,36 @@ html[data-pc-theme="light"][data-pc-livery="pearl"] .mobile-nav-ribbon::after{
   transition:transform .45s cubic-bezier(.16,.8,.24,1);display:inline-block;}
 .wf-card:hover .wf-go{transform:translateX(4px);}
 [dir="rtl"] .wf-card:hover .wf-go{transform:translateX(-4px);}
+
+/* ---- Pearl: the six doors in platinum, with crimson as the one
+   accent instead of coffee-brown. Written unscoped above (the coffee
+   wash was the only edition this section ever had), so Pearl inherited
+   it unchanged — the same cream-plate, coffee-border pattern already
+   corrected on the masthead and the footer. */
+html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-card{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.7),transparent 42%),
+    linear-gradient(168deg,#FFFFFF,#F5F6F7);
+  border-color:rgba(124,31,46,.22);}
+html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-card:hover,
+html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-card:focus-visible{
+  border-color:rgba(124,31,46,.55);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.95),
+             0 22px 40px -26px rgba(59,42,29,.35),
+             0 0 0 1px rgba(124,31,46,.18);}
+html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-ico{
+  color:#7C1F2E;border-color:rgba(124,31,46,.3);
+  background:radial-gradient(120% 120% at 50% 0%,
+    rgba(124,31,46,.12),rgba(255,255,255,.6) 74%);}
+html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-card:hover .wf-ico{
+  border-color:#7C1F2E;
+  box-shadow:0 0 22px -4px rgba(124,31,46,.5);}
+html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-k{color:#2A2118;}
+html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-k::after{
+  background:linear-gradient(90deg,#7C1F2E,transparent);}
+[dir="rtl"] html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-k::after{
+  background:linear-gradient(270deg,#7C1F2E,transparent);}
+html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-go{color:#7C1F2E;}
 
 /* Only Midnight takes the dark plate. The Royal edition is black and
    gold in its CHROME and cream in its PAGES — a first draft gave these

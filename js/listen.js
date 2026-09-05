@@ -36,7 +36,7 @@
 
   if (!('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) return;
 
-  var PREFS_KEY = 'shrsPersonalisation';
+  var PREFS_KEY = 'shrsPersonalisation_v2';
   var DOC_LANG = (document.documentElement.lang || 'en').toLowerCase();
 
   var STRINGS = {

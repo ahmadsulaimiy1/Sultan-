@@ -21,13 +21,13 @@
    it, and the Digital Campus by injection, because those pages are
    hand-authored and have no slot to give.
 
-   It writes the same shrsPersonalisation key the Personalisation
+   It writes the same shrsPersonalisation_v2 key the Personalisation
    Centre writes, so the two can never disagree.
    =================================================================== */
 (function () {
   'use strict';
 
-  var PREFS_KEY = 'shrsPersonalisation';
+  var PREFS_KEY = 'shrsPersonalisation_v2';
   var ORDER = ['royal', 'light', 'dark'];
   /* The three editions are named here exactly as the Personalisation Centre
      names them in partials/personalisation.html — Clear, Royal, Midnight —
