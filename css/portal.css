@@ -464,11 +464,12 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
    logic or HTML structure. */
 .portal-child-card{
   background:linear-gradient(165deg,var(--portal-card) 0%,var(--ivory-bg) 100%);color:var(--ink);
-  border:1px solid rgba(var(--lv-gs,198,161,91),0.4);border-radius:calc(var(--btn-radius) - 2px);overflow:hidden;
+  border:1px solid rgba(var(--lv-gs,198,161,91),0.45);border-radius:calc(var(--btn-radius) - 2px);overflow:hidden;
   box-shadow:0 32px 64px -30px rgba(var(--lv-w04,20,13,4),0.34),
     0 10px 22px -12px rgba(var(--lv-w04,20,13,4),0.22),
-    inset 0 1px 0 rgba(var(--lv-bev,255,255,255),0.65),
-    inset 0 0 0 1px rgba(var(--lv-gs,198,161,91),0.16);
+    inset 0 1px 0 rgba(var(--lv-bev,255,255,255),0.75),
+    inset 0 0 0 1px rgba(var(--lv-gbs,233,206,138),0.3),
+    inset 0 -10px 18px -14px rgba(var(--lv-w04,20,13,4),0.14);
   margin-bottom:18px;
   position:relative;
 }
@@ -635,21 +636,33 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
 }
 
 /* --- Founder Dashboard --- */
+/* Genuine dimensional depth, not a flat tinted rectangle: a deep ambient
+   shadow plus a tighter contact shadow lift the card off the page, a
+   bright top-inner highlight plus a metallic gold inner ring trace a
+   beveled edge, and a soft dark inner shadow along the bottom completes
+   the emboss — all box-shadow, no backdrop-filter/blur (this codebase
+   already reverted that twice; see css/prestige.css's own note on
+   .gateway-card). This is the "3D, not flat" fix applied through the
+   shared card classes, so it reaches every dashboard at once. */
 .pfd-section{
   background:linear-gradient(165deg,var(--portal-card) 0%,var(--ivory-bg) 100%);color:var(--ink);
-  border:1px solid rgba(var(--lv-gs,198,161,91),0.4);border-radius:calc(var(--btn-radius) - 2px);overflow:hidden;
+  border:1px solid rgba(var(--lv-gs,198,161,91),0.45);border-radius:calc(var(--btn-radius) - 2px);overflow:hidden;
   box-shadow:0 32px 64px -30px rgba(var(--lv-w04,20,13,4),0.34),
     0 10px 22px -12px rgba(var(--lv-w04,20,13,4),0.22),
-    inset 0 1px 0 rgba(var(--lv-bev,255,255,255),0.65);
+    inset 0 1px 0 rgba(var(--lv-bev,255,255,255),0.75),
+    inset 0 0 0 1px rgba(var(--lv-gbs,233,206,138),0.28),
+    inset 0 -10px 18px -14px rgba(var(--lv-w04,20,13,4),0.16);
   padding:22px 26px;margin-bottom:18px;position:relative;
   transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease;
 }
-/* Restrained hover lift — the whole card, not just its contents. */
+/* A restrained hover lift, further off the page than before. */
 .pfd-section:hover{
-  transform:translateY(-3px);border-color:var(--atmos,var(--gold));
-  box-shadow:0 38px 72px -28px rgba(var(--lv-w04,20,13,4),0.4),
-    0 14px 26px -12px rgba(var(--lv-w04,20,13,4),0.26),
-    inset 0 1px 0 rgba(var(--lv-bev,255,255,255),0.65);
+  transform:translateY(-5px);border-color:var(--atmos,var(--gold));
+  box-shadow:0 42px 80px -26px rgba(var(--lv-w04,20,13,4),0.42),
+    0 16px 30px -12px rgba(var(--lv-w04,20,13,4),0.28),
+    inset 0 1px 0 rgba(var(--lv-bev,255,255,255),0.75),
+    inset 0 0 0 1px rgba(var(--lv-gbs,233,206,138),0.4),
+    inset 0 -10px 18px -14px rgba(var(--lv-w04,20,13,4),0.16);
 }
 @media (prefers-reduced-motion:reduce){.pfd-section:hover{transform:none;}}
 /* Scroll reveal — sections below the fold stay invisible until they
@@ -1464,8 +1477,8 @@ html[data-pc-theme="royal"] .exec-welcome{
     linear-gradient(90deg, var(--gold) 0, var(--gold) 24px, transparent 24px),
     linear-gradient(180deg, var(--gold) 0, var(--gold) 24px, transparent 24px),
     radial-gradient(420px 280px at var(--lattice-x,-10%) 45%, var(--lattice-glow, rgba(var(--lv-gs,198,161,91),.20)), transparent 68%),
-    repeating-linear-gradient(45deg, var(--lattice-line, rgba(var(--lv-gs,198,161,91),.16)) 0 1.5px, transparent 1.5px 72px),
-    repeating-linear-gradient(-45deg, var(--lattice-line, rgba(var(--lv-gs,198,161,91),.16)) 0 1.5px, transparent 1.5px 72px),
+    repeating-linear-gradient(45deg, var(--lattice-line, rgba(var(--lv-gs,198,161,91),.16)) 0 1.5px, transparent 1.5px 168px),
+    repeating-linear-gradient(-45deg, var(--lattice-line, rgba(var(--lv-gs,198,161,91),.16)) 0 1.5px, transparent 1.5px 168px),
     linear-gradient(168deg, var(--pearl,rgb(251,247,239)) 0%, var(--pearl-2,rgb(244,237,224)) 60%, var(--pearl-3,rgb(237,227,210)) 100%);
   background-size:260% 100%, auto, 24px 1.5px, 1.5px 24px, 24px 1.5px, 1.5px 24px, auto, auto, auto, auto;
   background-position:140% 0, 0 0, 18px 18px, 18px 18px, right 18px bottom 18px, right 18px bottom 18px, 0 0, 0 0, 0 0, 0 0;
@@ -1481,8 +1494,8 @@ html[data-pc-theme="royal"] .exec-welcome{
     linear-gradient(90deg, var(--gold-bright) 0, var(--gold-bright) 24px, transparent 24px),
     linear-gradient(180deg, var(--gold-bright) 0, var(--gold-bright) 24px, transparent 24px),
     radial-gradient(420px 280px at var(--lattice-x,-10%) 45%, var(--lattice-glow, rgba(var(--lv-gbs,233,206,138),.22)), transparent 68%),
-    repeating-linear-gradient(45deg, var(--lattice-line, rgba(var(--lv-gbs,233,206,138),.32)) 0 1.5px, transparent 1.5px 72px),
-    repeating-linear-gradient(-45deg, var(--lattice-line, rgba(var(--lv-gbs,233,206,138),.32)) 0 1.5px, transparent 1.5px 72px),
+    repeating-linear-gradient(45deg, var(--lattice-line, rgba(var(--lv-gbs,233,206,138),.32)) 0 1.5px, transparent 1.5px 168px),
+    repeating-linear-gradient(-45deg, var(--lattice-line, rgba(var(--lv-gbs,233,206,138),.32)) 0 1.5px, transparent 1.5px 168px),
     linear-gradient(135deg, var(--navy-bg) 0%, var(--navy-deep-bg) 100%);
 }
 @keyframes exec-gold-sweep{
@@ -1516,24 +1529,29 @@ html[data-pc-theme="royal"] .exec-welcome{
 @media (max-width:640px){.exec-welcome::after{width:170px;height:151px;right:-20px;}
   [dir="rtl"] .exec-welcome::after{left:-20px;}}
 .exec-welcome-eyebrow{font-size:0.8rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgb(var(--lv-gt2,138,106,47));margin-bottom:6px;}
-.exec-welcome h1{font-family:'Cinzel','Amiri',serif;font-size:1.55rem;line-height:1.15;margin:0 0 12px;color:var(--pearl-ink,#332818);position:relative;padding-bottom:8px;}
+.exec-welcome h1{font-family:'Cinzel','Amiri',serif;font-size:1.55rem;line-height:1.15;margin:0 0 12px;color:#1E1811;position:relative;padding-bottom:8px;}
 /* Ceremonial letterhead rule (Imperial Luxury Experience Directive):
    every institutional office title is framed the way a royal decree or
    an Oxford/Harvard annual report frames its own title — a heavier
-   rule directly beneath the text, a shorter, finer rule beneath that.
-   One CSS treatment, zero new markup, reused by every office. */
+   gold rule directly beneath the text, a shorter, finer garnet rule
+   beneath that. Gold-and-garnet is an existing heraldic pairing in this
+   brand (--crimson is already the site's own accent red, used on the
+   public pages) — brought in here so the hero isn't gold-and-ink alone,
+   per the founder's own direction: "gold... and elegant red where
+   required... not everything just brown." One CSS treatment, zero new
+   markup, reused by every office. */
 .exec-welcome h1::after{
   content:'';position:absolute;left:1px;bottom:0;width:96px;height:9px;pointer-events:none;
   background-image:linear-gradient(90deg, var(--gold) 0%, var(--gold) 100%),
-    linear-gradient(90deg, var(--gold) 0%, var(--gold) 100%);
+    linear-gradient(90deg, var(--crimson,#7C1F2E) 0%, var(--crimson,#7C1F2E) 100%);
   background-size:100% 2px, 42% 1px;
   background-position:0 0, 0 7px;
   background-repeat:no-repeat;
   opacity:0.92;
 }
 [dir="rtl"] .exec-welcome h1::after{left:auto;right:1px;}
-.exec-welcome-role{font-size:0.92rem;color:var(--pearl-ink-2,#57472f);margin-bottom:4px;}
-.exec-welcome-motto{font-family:'Cormorant Garamond','Amiri',serif;font-style:italic;font-size:0.98rem;color:rgb(var(--lv-gt2,138,106,47));margin-bottom:14px;}
+.exec-welcome-role{font-size:0.92rem;color:#5A5248;margin-bottom:4px;}
+.exec-welcome-motto{font-family:'Cormorant Garamond','Amiri',serif;font-style:italic;font-size:0.98rem;color:var(--crimson,#7C1F2E);margin-bottom:14px;}
 .exec-welcome-stats{display:flex;flex-wrap:wrap;gap:14px 30px;padding-top:14px;border-top:1px solid rgba(var(--lv-gs,198,161,91),0.3);}
 .exec-welcome-stat{display:flex;flex-direction:column;}
 .exec-welcome-stat .value{font-family:'Cinzel','Amiri',serif;font-size:1.4rem;color:rgb(var(--lv-gt2,138,106,47));}

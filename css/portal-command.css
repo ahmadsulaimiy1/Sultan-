@@ -798,8 +798,8 @@ body.portal-body .exec-welcome {
      to this pearl ground to disappear. */
   background-image:
     radial-gradient(420px 280px at var(--lattice-x,-10%) 45%, var(--lattice-glow, rgba(var(--lv-gs,198,161,91),.20)), transparent 68%),
-    repeating-linear-gradient(45deg, var(--lattice-line, rgba(var(--lv-gs,198,161,91),.16)) 0 1.5px, transparent 1.5px 72px),
-    repeating-linear-gradient(-45deg, var(--lattice-line, rgba(var(--lv-gs,198,161,91),.16)) 0 1.5px, transparent 1.5px 72px),
+    repeating-linear-gradient(45deg, var(--lattice-line, rgba(var(--lv-gs,198,161,91),.16)) 0 1.5px, transparent 1.5px 168px),
+    repeating-linear-gradient(-45deg, var(--lattice-line, rgba(var(--lv-gs,198,161,91),.16)) 0 1.5px, transparent 1.5px 168px),
     linear-gradient(168deg, var(--pearl,rgb(251,247,239)) 0%, var(--pearl-2,rgb(244,237,224)) 60%, var(--pearl-3,rgb(237,227,210)) 100%);
   background-size: auto;
   background-position: 0 0;
@@ -857,8 +857,8 @@ html[data-pc-theme="dark"] body.portal-body .exec-welcome,
 html[data-pc-theme="royal"] body.portal-body .exec-welcome {
   background-image:
     radial-gradient(420px 280px at var(--lattice-x,-10%) 45%, var(--lattice-glow, rgba(233,206,138,.22)), transparent 68%),
-    repeating-linear-gradient(45deg, var(--lattice-line, rgba(233,206,138,.32)) 0 1.5px, transparent 1.5px 72px),
-    repeating-linear-gradient(-45deg, var(--lattice-line, rgba(233,206,138,.32)) 0 1.5px, transparent 1.5px 72px),
+    repeating-linear-gradient(45deg, var(--lattice-line, rgba(233,206,138,.32)) 0 1.5px, transparent 1.5px 168px),
+    repeating-linear-gradient(-45deg, var(--lattice-line, rgba(233,206,138,.32)) 0 1.5px, transparent 1.5px 168px),
     linear-gradient(168deg, #221709 0%, #1A1206 46%, #140D04 100%);
   box-shadow: 0 30px 66px -28px rgba(40,26,8,.55);
 }

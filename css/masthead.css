@@ -1197,11 +1197,18 @@ html[data-pc-theme="light"] .gateway-card{
      between the white top-fade and the opaque plate underneath it. */
   background:
     linear-gradient(180deg,rgba(255,255,255,.72),transparent 40%),
-    repeating-linear-gradient(45deg, rgba(140,104,52,.16) 0 1.5px, transparent 1.5px 60px),
-    repeating-linear-gradient(-45deg, rgba(140,104,52,.16) 0 1.5px, transparent 1.5px 60px),
+    repeating-linear-gradient(45deg, rgba(140,104,52,.16) 0 1.5px, transparent 1.5px 140px),
+    repeating-linear-gradient(-45deg, rgba(140,104,52,.16) 0 1.5px, transparent 1.5px 140px),
     linear-gradient(168deg,rgb(var(--lv-p1,255,253,249)),rgb(var(--lv-p4,247,240,226)))!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),
-             0 2px 3px rgba(59,42,29,.05);
+  /* Real dimensional lift, not the near-flat plate this used to be —
+     an ambient shadow plus a tighter contact shadow, a bright inner
+     top highlight, a metallic gold inner ring, and a soft embossed
+     shadow along the bottom edge. */
+  box-shadow:0 26px 52px -30px rgba(59,42,29,.32),
+             0 8px 16px -10px rgba(59,42,29,.18),
+             inset 0 1px 0 rgba(255,255,255,.9),
+             inset 0 0 0 1px rgba(140,104,52,.22),
+             inset 0 -8px 14px -12px rgba(59,42,29,.14);
   transition:transform .5s cubic-bezier(.16,.8,.24,1),
              box-shadow .45s ease,border-color .45s ease!important;}
 /* The accent each door carries is kept, but as a lit edge that draws
@@ -1281,8 +1288,8 @@ html[data-pc-theme="royal"] .gw-q{
      through), so there is no opaque-layer occlusion order to worry
      about; the diagonals just add to the same gold wash. */
   background:linear-gradient(168deg,rgba(233,206,138,.11),rgba(198,161,91,.035)),
-    repeating-linear-gradient(45deg, rgba(233,206,138,.22) 0 1.5px, transparent 1.5px 60px),
-    repeating-linear-gradient(-45deg, rgba(233,206,138,.22) 0 1.5px, transparent 1.5px 60px)!important;
+    repeating-linear-gradient(45deg, rgba(233,206,138,.22) 0 1.5px, transparent 1.5px 140px),
+    repeating-linear-gradient(-45deg, rgba(233,206,138,.22) 0 1.5px, transparent 1.5px 140px)!important;
   border-color:rgba(233,206,138,.32)!important;}
 html[data-pc-theme="dark"] .gateway-card-icon,
 html[data-pc-theme="dark"] .gw-q-i,

@@ -2065,16 +2065,22 @@
      suit the card's smaller size. Opaque base last (see the hero's own
      comment in css/portal.css for the layer-order bug this avoids). */
   background:radial-gradient(520px 220px at 12% -20%, rgba(var(--lv-gbs,233,206,138),.13), transparent 62%),
-    repeating-linear-gradient(45deg, rgba(var(--lv-gbs,233,206,138),.20) 0 1.5px, transparent 1.5px 60px),
-    repeating-linear-gradient(-45deg, rgba(var(--lv-gbs,233,206,138),.20) 0 1.5px, transparent 1.5px 60px),
+    repeating-linear-gradient(45deg, rgba(var(--lv-gbs,233,206,138),.20) 0 1.5px, transparent 1.5px 140px),
+    repeating-linear-gradient(-45deg, rgba(var(--lv-gbs,233,206,138),.20) 0 1.5px, transparent 1.5px 140px),
     linear-gradient(168deg,rgb(var(--lv-w174,51,35,18)) 0%,rgb(var(--lv-w65s,42,27,13)) 52%,rgb(var(--lv-w175,32,20,10)) 100%);
   border:1px solid rgba(var(--lv-gbs,233,206,138),.28);
-  box-shadow:0 2px 4px rgba(0,0,0,.3),0 22px 46px -26px rgba(0,0,0,.8),inset 0 1px 0 rgba(var(--lv-gbs,233,206,138),.22);
+  box-shadow:0 2px 4px rgba(0,0,0,.3),0 22px 46px -26px rgba(0,0,0,.8),
+    inset 0 1px 0 rgba(var(--lv-gbs,233,206,138),.22),
+    inset 0 0 0 1px rgba(var(--lv-gbs,233,206,138),.24),
+    inset 0 -8px 16px -12px rgba(0,0,0,.4);
   transition:transform .5s var(--pr-ease),box-shadow .5s var(--pr-ease),border-color .5s;
   text-decoration:none;color:inherit;display:block;}
-.gateway-card:hover{transform:translateY(-7px);border-color:rgba(var(--lv-gbs,233,206,138),.45);
-  box-shadow:0 4px 8px rgba(0,0,0,.35),0 34px 66px -28px rgba(0,0,0,.9),
-             0 0 40px -10px rgba(var(--lv-gbs,233,206,138),.45),inset 0 1px 0 rgba(var(--lv-gbs,233,206,138),.3);}
+.gateway-card:hover{transform:translateY(-9px);border-color:rgba(var(--lv-gbs,233,206,138),.45);
+  box-shadow:0 4px 8px rgba(0,0,0,.35),0 40px 78px -26px rgba(0,0,0,.9),
+             0 0 40px -10px rgba(var(--lv-gbs,233,206,138),.45),
+             inset 0 1px 0 rgba(var(--lv-gbs,233,206,138),.3),
+             inset 0 0 0 1px rgba(var(--lv-gbs,233,206,138),.4),
+             inset 0 -8px 16px -12px rgba(0,0,0,.4);}
 /* The travelling gold light (.rg-light, css/regalia.css) is otherwise
    hover/focus-only — invisible on a page most people scan rather than
    point at one card at a time. Each of the eight doors gets a restrained
@@ -3497,8 +3503,8 @@ html[data-pc-theme="light"] .gateway-card{
      card's own near-white ground to disappear (the same swap the
      footer's light lattice needed). Opaque base last. */
   background:radial-gradient(520px 220px at 12% -20%, rgba(var(--lv-gbs,233,206,138),.26), transparent 62%),
-    repeating-linear-gradient(45deg, rgba(var(--lv-gs,198,161,91),.16) 0 1.5px, transparent 1.5px 60px),
-    repeating-linear-gradient(-45deg, rgba(var(--lv-gs,198,161,91),.16) 0 1.5px, transparent 1.5px 60px),
+    repeating-linear-gradient(45deg, rgba(var(--lv-gs,198,161,91),.16) 0 1.5px, transparent 1.5px 140px),
+    repeating-linear-gradient(-45deg, rgba(var(--lv-gs,198,161,91),.16) 0 1.5px, transparent 1.5px 140px),
     linear-gradient(168deg,rgb(var(--lv-wh,255,255,255)) 0%,rgb(var(--lv-w51,248,241,227)) 52%,rgb(var(--lv-w191,242,233,216)) 100%);
   border-color:rgba(var(--lv-gs,198,161,91),.34);
   color:var(--pearl-ink);
