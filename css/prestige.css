@@ -2059,8 +2059,14 @@
    own gradient, its own hairline, its own bevel. Nothing shows through. */
 .gateway-card{
   position:relative;isolation:isolate;overflow:hidden;
-  border-radius:var(--pr-r-lg);padding:30px 26px;
+  border-radius:var(--pr-r-lg);padding:34px 30px;
+  /* THE SHRS LATTICE (Phase 7, Scope E) — the same crossing-hairline
+     motif as the executive hero and footer, at a tighter 60px scale to
+     suit the card's smaller size. Opaque base last (see the hero's own
+     comment in css/portal.css for the layer-order bug this avoids). */
   background:radial-gradient(520px 220px at 12% -20%, rgba(var(--lv-gbs,233,206,138),.13), transparent 62%),
+    repeating-linear-gradient(45deg, rgba(var(--lv-gbs,233,206,138),.20) 0 1.5px, transparent 1.5px 60px),
+    repeating-linear-gradient(-45deg, rgba(var(--lv-gbs,233,206,138),.20) 0 1.5px, transparent 1.5px 60px),
     linear-gradient(168deg,rgb(var(--lv-w174,51,35,18)) 0%,rgb(var(--lv-w65s,42,27,13)) 52%,rgb(var(--lv-w175,32,20,10)) 100%);
   border:1px solid rgba(var(--lv-gbs,233,206,138),.28);
   box-shadow:0 2px 4px rgba(0,0,0,.3),0 22px 46px -26px rgba(0,0,0,.8),inset 0 1px 0 rgba(var(--lv-gbs,233,206,138),.22);
@@ -2079,21 +2085,27 @@
 .gateway-card.rg-light:focus-within::before{opacity:1;}
 @media (prefers-reduced-motion:reduce){.gateway-card.rg-light::before{opacity:.35;}}
 .gateway-card-icon{
-  width:56px;height:56px;border-radius:var(--pr-r-md);display:grid;place-items:center;
+  width:60px;height:60px;border-radius:var(--pr-r-md);display:grid;place-items:center;
   background:linear-gradient(140deg,rgba(var(--lv-gbs,233,206,138),.22),rgba(var(--lv-gs,198,161,91),.06));
   border:1px solid rgba(var(--lv-gbs,233,206,138),.34);color:var(--pr-gold-bright);
-  box-shadow:inset 0 1px 0 rgba(var(--lv-gbs,233,206,138),.3);margin-bottom:16px;
+  box-shadow:inset 0 1px 0 rgba(var(--lv-gbs,233,206,138),.3);margin-bottom:18px;
   transition:transform .5s var(--pr-ease),box-shadow .5s var(--pr-ease);}
 .gateway-card:hover .gateway-card-icon{transform:translateY(-3px) scale(1.07) rotate(-4deg);
   box-shadow:0 12px 26px -14px rgba(var(--lv-gbs,233,206,138),.8);}
-.gateway-card-icon svg{width:27px;height:27px;}
-.gateway-card-eyebrow{font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;
+.gateway-card-icon svg{width:29px;height:29px;}
+.gateway-card-eyebrow{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;
   color:rgba(var(--lv-gb,233,206,138),.8);}
+/* Gold-foil letterpress: a bright hairline above (as if struck into
+   foil and catching light from above) and a soft dark recess below —
+   the same dual-layer text-shadow idiom already used for italic
+   statement text elsewhere (.pch-statement-style treatments), applied
+   here to the door's own name. */
 .gateway-card h2,.gateway-card h3{font-family:var(--font-label);color:#fff;
-  font-size:1.12rem;margin:7px 0 8px;}
-.gateway-card p{color:rgba(var(--lv-w03,243,232,212),.74);font-size:.92rem;line-height:1.6;}
-.gateway-card-cta{display:inline-flex;align-items:center;gap:8px;margin-top:14px;
-  color:var(--pr-gold-bright);font-weight:600;font-size:.86rem;}
+  font-size:1.3rem;margin:9px 0 10px;
+  text-shadow:0 1px 0 rgba(255,255,255,.16),0 2px 8px rgba(0,0,0,.55);}
+.gateway-card p{color:rgba(var(--lv-w03,243,232,212),.74);font-size:.96rem;line-height:1.62;}
+.gateway-card-cta{display:inline-flex;align-items:center;gap:8px;margin-top:16px;
+  color:var(--pr-gold-bright);font-weight:600;font-size:.9rem;}
 .gateway-card:hover .gateway-card-cta{gap:12px;}
 
 /* the sign-in card itself */
@@ -3480,12 +3492,21 @@ html[data-pc-theme="light"] body.portal-body{
   color:var(--pearl-ink);}
 html[data-pc-theme="light"] .portal-body::before{opacity:.28;}
 html[data-pc-theme="light"] .gateway-card{
+  /* THE SHRS LATTICE (Phase 7, Scope E), light-theme variant — the muted
+     --lv-gs gold rather than --lv-gbs, which is close enough to this
+     card's own near-white ground to disappear (the same swap the
+     footer's light lattice needed). Opaque base last. */
   background:radial-gradient(520px 220px at 12% -20%, rgba(var(--lv-gbs,233,206,138),.26), transparent 62%),
+    repeating-linear-gradient(45deg, rgba(var(--lv-gs,198,161,91),.16) 0 1.5px, transparent 1.5px 60px),
+    repeating-linear-gradient(-45deg, rgba(var(--lv-gs,198,161,91),.16) 0 1.5px, transparent 1.5px 60px),
     linear-gradient(168deg,rgb(var(--lv-wh,255,255,255)) 0%,rgb(var(--lv-w51,248,241,227)) 52%,rgb(var(--lv-w191,242,233,216)) 100%);
   border-color:rgba(var(--lv-gs,198,161,91),.34);
   color:var(--pearl-ink);
   box-shadow:0 2px 4px rgba(var(--lv-cfd2s,42,28,16),.06),0 22px 46px -28px rgba(var(--lv-cfd2s,42,28,16),.4),
              inset 0 1px 0 rgba(var(--lv-bev,255,255,255),.9);}
+html[data-pc-theme="light"] .gateway-card h2,
+html[data-pc-theme="light"] .gateway-card h3{
+  text-shadow:0 1px 0 rgba(255,255,255,.7),0 1px 2px rgba(var(--lv-cfd2s,42,28,16),.12);}
 html[data-pc-theme="light"] .gateway-card h2,
 html[data-pc-theme="light"] .gateway-card h3{color:var(--pearl-ink);}
 html[data-pc-theme="light"] .gateway-card > p{color:var(--pearl-ink-2);}
