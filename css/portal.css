@@ -58,11 +58,17 @@
   --ivory:rgb(var(--lv-w258,24,16,9)); --milk:rgb(var(--lv-cfd5,34,23,9)); --line:rgba(var(--lv-gb,233,206,138),0.22);
   --portal-heading:rgb(var(--lv-gb,233,206,138)); --portal-card:rgb(var(--lv-w259,36,26,16));
 }
+/* Founder correction, third pass — the page canvas itself was drifting
+   warm (milk fading to ivory) rather than staying a plain, consistent
+   platinum-white, and every card on it read the same flat tone as that
+   canvas because both ended in the same warm ivory. Two separate fixes:
+   the page stays a plain, cool platinum ramp always; the cards (below)
+   get their own rotation of premium tones instead of all matching it. */
 body.portal-body{
   position:relative;isolation:isolate;
   min-height:100vh;color:var(--ink);
-  background:radial-gradient(1200px 560px at 88% -12%, rgba(var(--lv-gs,198,161,91),0.10), transparent 62%),
-    linear-gradient(180deg, var(--milk-bg, rgb(var(--lv-p2,252,250,246))) 0%, var(--ivory-bg) 100%);
+  background:radial-gradient(1200px 560px at 88% -12%, rgba(var(--lv-gs,198,161,91),0.08), transparent 62%),
+    linear-gradient(180deg, #FBFBFA 0%, #F1F2F0 100%);
   font-family:'Inter','Cairo',sans-serif;display:flex;flex-direction:column;
   transition:background .25s ease,color .25s ease;
 }
@@ -463,7 +469,7 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
    staff/teacher, founder) upgrade at once without touching their data
    logic or HTML structure. */
 .portal-child-card{
-  background:linear-gradient(165deg,var(--portal-card) 0%,var(--ivory-bg) 100%);color:var(--ink);
+  background:linear-gradient(165deg,#FFFFFF 0%,#F8F9F8 100%);color:var(--ink);
   border:1px solid rgba(var(--lv-gs,198,161,91),0.45);border-radius:calc(var(--btn-radius) - 2px);overflow:hidden;
   box-shadow:0 32px 64px -30px rgba(var(--lv-w04,20,13,4),0.34),
     0 10px 22px -12px rgba(var(--lv-w04,20,13,4),0.22),
@@ -473,6 +479,10 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
   margin-bottom:18px;
   position:relative;
 }
+/* Same premium-tone rotation as .pfd-section, so the office grid reads
+   as considered variety, not a stack of identical white boxes. */
+.portal-child-card:nth-of-type(3n+2){background:linear-gradient(165deg,#F7F8F8 0%,#EBECEA 100%);}
+.portal-child-card:nth-of-type(3n){background:linear-gradient(165deg,#FFFDF6 0%,#F7EFDC 100%);}
 /* Luxury Material System (Imperial Luxury Experience Directive) — a
    faint engraved bevel line set slightly inside the card edge, so the
    card reads as a cut/inlaid panel rather than a flat rectangle. Pure
@@ -513,7 +523,13 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
    background as a jarring solid block. Each .portal-stat carries its
    own border instead, so it never depends on the row being full. */
 .portal-stats{display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:1px;}
-.portal-stat{background:var(--ivory-bg);padding:14px 18px;border:1px solid var(--line);border-top:2px solid var(--gold);}
+.portal-stat{
+  background:linear-gradient(165deg,#FFFFFF 0%,#F8F9F8 100%);padding:14px 18px;
+  border:1px solid var(--line);border-top:2px solid var(--gold);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8),inset 0 -6px 10px -10px rgba(20,13,4,.14);
+}
+.portal-stat:nth-of-type(3n+2){background:linear-gradient(165deg,#F7F8F8 0%,#EBECEA 100%);}
+.portal-stat:nth-of-type(3n){background:linear-gradient(165deg,#FFFDF6 0%,#F7EFDC 100%);}
 .portal-stat .label{font-size:0.76rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-soft);}
 .portal-stat .value{font-family:'Cinzel','Amiri',serif;font-size:1.55rem;color:var(--portal-heading);margin-top:5px;font-variant-numeric:tabular-nums;}
 .portal-results{padding:16px 20px;}
@@ -644,8 +660,15 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
    already reverted that twice; see css/prestige.css's own note on
    .gateway-card). This is the "3D, not flat" fix applied through the
    shared card classes, so it reaches every dashboard at once. */
+/* Founder correction, third pass — every card down the page was the
+   same flat tone as the page itself, because both ended in the same
+   warm ivory. A rotation of three premium tones (pure white, platinum,
+   ivory) breaks that monotony — still one restrained family, not
+   "any colour," and each is deliberately cooler/warmer than the plain
+   platinum page canvas above so the card actually reads as sitting on
+   the page rather than blending into it. */
 .pfd-section{
-  background:linear-gradient(165deg,var(--portal-card) 0%,var(--ivory-bg) 100%);color:var(--ink);
+  background:linear-gradient(165deg,#FFFFFF 0%,#F8F9F8 100%);color:var(--ink);
   border:1px solid rgba(var(--lv-gs,198,161,91),0.45);border-radius:calc(var(--btn-radius) - 2px);overflow:hidden;
   box-shadow:0 32px 64px -30px rgba(var(--lv-w04,20,13,4),0.34),
     0 10px 22px -12px rgba(var(--lv-w04,20,13,4),0.22),
@@ -665,6 +688,8 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
     inset 0 -10px 18px -14px rgba(var(--lv-w04,20,13,4),0.16);
 }
 @media (prefers-reduced-motion:reduce){.pfd-section:hover{transform:none;}}
+.pfd-section:nth-of-type(3n+2){background:linear-gradient(165deg,#F7F8F8 0%,#EBECEA 100%);}
+.pfd-section:nth-of-type(3n){background:linear-gradient(165deg,#FFFDF6 0%,#F7EFDC 100%);}
 /* Scroll reveal — sections below the fold stay invisible until they
    enter the viewport (see the IntersectionObserver in js/portal-
    founder-dashboard.js), so the page keeps "unfolding" as an Executive
