@@ -785,40 +785,54 @@ body.portal-body .portal-child-card a:hover { color: var(--cmd-espresso); }
    directly. Pearl-white-with-gold is now the default; the dark/royal
    -scoped block further down keeps the original espresso plate for an
    explicit dark-theme choice only. */
+/* Founder correction, second pass — the crosshatch lattice read as
+   "nonsense... clustered," the ground still measured cream/ivory rather
+   than platinum, and the gold was "too subtle... where are the metallic
+   foiled gold?" See css/portal.css's own .exec-welcome for the full
+   account of the border-box/padding-box double-clip technique used
+   here: a genuine multi-stop gold foil ramp painted into the border
+   ring only, animated for a slow shimmer, while the platinum fill and
+   the single soft spotlight glow stay inside it — no crossing lines. */
 body.portal-body .exec-welcome {
   position: relative; isolation: isolate; overflow: hidden;
   border-radius: 20px;
   padding: clamp(22px, 3.4vw, 40px) clamp(20px, 3vw, 40px);
-  border: 1px solid rgba(198,161,91,.4);
-  /* THE SHRS LATTICE (Phase 7) — see css/portal.css's own .exec-welcome
-     for the full account of the two bugs this exact recipe already hit
-     (layer order, and an undeclared background-size/position property
-     silently inherited from an unrelated rule) — both already fixed
-     here. Muted --lv-gs gold, not --lv-gbs: bright gold is close enough
-     to this pearl ground to disappear. */
+  border: 3px solid transparent;
   background-image:
-    radial-gradient(420px 280px at var(--lattice-x,-10%) 45%, var(--lattice-glow, rgba(var(--lv-gs,198,161,91),.20)), transparent 68%),
-    repeating-linear-gradient(45deg, var(--lattice-line, rgba(var(--lv-gs,198,161,91),.16)) 0 1.5px, transparent 1.5px 168px),
-    repeating-linear-gradient(-45deg, var(--lattice-line, rgba(var(--lv-gs,198,161,91),.16)) 0 1.5px, transparent 1.5px 168px),
-    linear-gradient(168deg, var(--pearl,rgb(251,247,239)) 0%, var(--pearl-2,rgb(244,237,224)) 60%, var(--pearl-3,rgb(237,227,210)) 100%);
-  background-size: auto;
-  background-position: 0 0;
-  background-repeat: no-repeat, repeat, repeat, no-repeat;
-  animation: shrs-lattice-glow 14s ease-in-out infinite;
-  box-shadow: 0 32px 64px -30px rgba(20,13,4,0.2),0 10px 22px -12px rgba(20,13,4,0.12),inset 0 1px 0 rgba(255,255,255,0.7);
+    radial-gradient(420px 200px at var(--lattice-x,-10%) -35%, var(--lattice-glow, rgba(233,206,138,.24)), transparent 65%),
+    linear-gradient(168deg, #FCFCFB 0%, #F3F4F2 55%, #E8E9E7 100%),
+    linear-gradient(100deg,
+      #8A6A2E 0%, #C6A15B 12%, #F3E3B8 25%, #FFFDF6 35%, #E9CE8A 45%,
+      #C6A15B 58%, #9A7734 68%, #E9CE8A 80%, #FBF3DF 90%, #8A6A2E 100%);
+  background-origin: padding-box, padding-box, border-box;
+  background-clip: padding-box, padding-box, border-box;
+  background-size: auto, auto, 320% 100%;
+  background-position: 0 0, 0 0, 0% 0;
+  background-repeat: no-repeat;
+  animation: shrs-lattice-glow 14s ease-in-out infinite, foil-shimmer 6s ease-in-out infinite;
+  box-shadow: 0 44px 100px -32px rgba(10,10,8,.4),
+    0 16px 34px -16px rgba(10,10,8,.24),
+    inset 0 1px 0 rgba(255,255,255,.9),
+    inset 0 -16px 26px -18px rgba(10,10,8,.12);
 }
-@media (prefers-reduced-motion: reduce){ body.portal-body .exec-welcome{ animation: none; } }
+@keyframes foil-shimmer{
+  0%,100%{background-position: 0 0, 0 0, 0% 0;}
+  50%{background-position: 0 0, 0 0, -140% 0;}
+}
+@media (prefers-reduced-motion: reduce){
+  body.portal-body .exec-welcome{ animation: none; background-position: 0 0, 0 0, -60% 0; }
+}
 body.portal-body .exec-welcome::before,
 body.portal-body .exec-welcome::after {
   content: ''; position: absolute; width: 52px; height: 52px; pointer-events: none;
-  border: 1px solid rgba(var(--lv-gs,198,161,91),.55);
+  border: 1.5px solid rgb(var(--lv-g,198,161,91));
 }
 body.portal-body .exec-welcome::before { top: 16px; left: 16px; border-right: 0; border-bottom: 0; }
 body.portal-body .exec-welcome::after  { bottom: 16px; right: 16px; border-left: 0; border-top: 0; }
 
 body.portal-body .exec-welcome h1 {
   font-family: 'Cinzel', 'EB Garamond', Garamond, serif;
-  color: var(--cmd-ink,#2A2016); font-size: clamp(25px, 3.5vw, 46px); line-height: 1.14;
+  color: #1E1811; font-size: clamp(25px, 3.5vw, 46px); line-height: 1.14;
   text-shadow: none; min-height: 1.2em;
 }
 /* the caret that follows the typing */
@@ -830,12 +844,17 @@ body.portal-body .exec-welcome h1 .cmd-caret {
 @keyframes cmd-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
 body.portal-body .exec-welcome h1 .cmd-caret[data-done] { animation: none; opacity: 0; }
 
-body.portal-body .exec-welcome-eyebrow,
-body.portal-body .exec-welcome-role { color: rgb(var(--lv-gt2,138,106,47)) !important; }
-body.portal-body .exec-welcome-role { color: var(--cmd-ink,#2A2016) !important; opacity: .82; }
+/* Genuine metallic gold text — the same foil ramp as the border,
+   clipped to the eyebrow/stat text itself rather than a flat tone. */
+body.portal-body .exec-welcome-eyebrow {
+  background-image: linear-gradient(100deg,#8A6A2E 0%,#C6A15B 20%,#F3E3B8 38%,#E9CE8A 52%,#C6A15B 68%,#9A7734 82%,#E9CE8A 100%) !important;
+  -webkit-background-clip: text !important; background-clip: text !important; color: transparent !important;
+  font-weight: 700 !important;
+}
+body.portal-body .exec-welcome-role { color: #1E1811 !important; opacity: .78; }
 body.portal-body .exec-welcome-motto {
   font-family: 'EB Garamond', Garamond, serif; font-style: italic;
-  color: rgb(var(--lv-gt2,138,106,47)) !important; font-size: clamp(14px, 1.5vw, 19px);
+  color: var(--crimson,#7C1F2E) !important; font-size: clamp(14px, 1.5vw, 19px);
 }
 body.portal-body .exec-welcome-stats {
   margin-top: 26px; padding-top: 22px; position: relative;
@@ -845,11 +864,12 @@ body.portal-body .exec-welcome-stats::before {
   background: var(--cmd-foil-soft); opacity: .85;
 }
 body.portal-body .exec-welcome-stat .value {
-  font-family: 'Cinzel', 'EB Garamond', serif; color: rgb(var(--lv-gt2,138,106,47)) !important;
-  font-variant-numeric: tabular-nums;
+  font-family: 'Cinzel', 'EB Garamond', serif; font-weight: 700; font-variant-numeric: tabular-nums;
+  background-image: linear-gradient(100deg,#8A6A2E 0%,#C6A15B 20%,#F3E3B8 38%,#E9CE8A 52%,#C6A15B 68%,#9A7734 82%,#E9CE8A 100%) !important;
+  -webkit-background-clip: text !important; background-clip: text !important; color: transparent !important;
 }
 body.portal-body .exec-welcome-stat .label {
-  color: var(--cmd-ink,#2A2016) !important; opacity: .78; letter-spacing: .16em; text-transform: uppercase;
+  color: #1E1811 !important; opacity: .78; letter-spacing: .16em; text-transform: uppercase;
 }
 
 /* Dark/royal theme: the original espresso plate, unchanged. */
@@ -873,13 +893,19 @@ html[data-pc-theme="royal"] body.portal-body .exec-welcome h1{
 html[data-pc-theme="dark"] body.portal-body .exec-welcome h1 .cmd-caret,
 html[data-pc-theme="royal"] body.portal-body .exec-welcome h1 .cmd-caret{background: var(--cmd-champagne);}
 html[data-pc-theme="dark"] body.portal-body .exec-welcome-eyebrow,
+html[data-pc-theme="royal"] body.portal-body .exec-welcome-eyebrow{
+  background-image: none !important; -webkit-background-clip: initial !important; background-clip: initial !important;
+  color: var(--cmd-champagne) !important; opacity:1;
+}
 html[data-pc-theme="dark"] body.portal-body .exec-welcome-role,
-html[data-pc-theme="royal"] body.portal-body .exec-welcome-eyebrow,
 html[data-pc-theme="royal"] body.portal-body .exec-welcome-role{ color: var(--cmd-champagne) !important; opacity:1; }
 html[data-pc-theme="dark"] body.portal-body .exec-welcome-motto,
 html[data-pc-theme="royal"] body.portal-body .exec-welcome-motto{ color: rgba(251,243,223,.90) !important; }
 html[data-pc-theme="dark"] body.portal-body .exec-welcome-stat .value,
-html[data-pc-theme="royal"] body.portal-body .exec-welcome-stat .value{ color: var(--cmd-champagne) !important; }
+html[data-pc-theme="royal"] body.portal-body .exec-welcome-stat .value{
+  background-image: none !important; -webkit-background-clip: initial !important; background-clip: initial !important;
+  color: var(--cmd-champagne) !important;
+}
 html[data-pc-theme="dark"] body.portal-body .exec-welcome-stat .label,
 html[data-pc-theme="royal"] body.portal-body .exec-welcome-stat .label{ color: rgba(233,206,138,.80) !important; opacity:1; }
 
