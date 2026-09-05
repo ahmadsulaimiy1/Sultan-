@@ -738,8 +738,14 @@ html[data-pc-theme="light"] .portal-shell-footer-links a{ color:rgba(59,42,29,.8
    copied in theirs.
    ------------------------------------------------------------------- */
 body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]){
-  --rgo-cream-1:rgb(251,246,234); --rgo-cream-2:rgb(247,238,223);
-  --rgo-parchment:rgb(241,228,200);
+  /* Polished white, not parchment — the founder was explicit that the
+     tonal cream-to-parchment gradient banding read as "lines" rather
+     than a clean surface. All three used to be a graduated cream→tan
+     scale; set to the same near-white value here so every gradient
+     built from them below collapses to one flat, polished surface
+     without rewriting each one. */
+  --rgo-cream-1:#FFFFFF; --rgo-cream-2:#FFFFFF;
+  --rgo-parchment:#FFFFFF;
   --rgo-ink:#2A1C10; --rgo-ink-soft:rgba(59,42,29,.74);
   --rgo-gold-deep:#8C6834; --rgo-gold-mid:#6B4E22;
   --rgo-line:rgba(140,104,52,.32);
@@ -800,11 +806,16 @@ body.portal-body:is([data-office-page="registrar"],[data-office-page="certificat
   --portal-heading:var(--rgo-gold-deep) !important;
   --ivory:var(--rgo-cream-1) !important; --milk:var(--rgo-cream-2) !important;
   --line:var(--rgo-line) !important;
-  background:
-    radial-gradient(1200px 620px at 78% -12%,rgba(198,161,91,.16),transparent 62%),
-    radial-gradient(900px 500px at 8% 108%,rgba(198,161,91,.10),transparent 60%),
-    linear-gradient(180deg,var(--rgo-cream-1) 0%,var(--rgo-parchment) 100%);
+  background:var(--rgo-cream-1) !important;
   color:var(--rgo-ink);}
+/* Polished white means flat — the eight-point dot field .portal-body::before
+   draws sitewide (css/prestige.css) reads as a visible grid of "lines"
+   against a plain white ground, even though it's meant to be a barely-
+   there texture on the darker espresso pages it was designed for. Off for
+   this theme only; every other atmosphere keeps it. */
+body.portal-body:is([data-office-page="registrar"],[data-office-page="certificate-centre"])::before{
+  display:none;
+}
 
 /* ---- The surfaces, repainted ---------------------------------------- */
 body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]) .pch-strip{

@@ -633,6 +633,42 @@
     }
   }
 
+  // Fetched separately from the dashboard aggregate — /api/portal/founder/
+  // dashboard has no staff-identity fields of its own (it also serves the
+  // token-only path, which has no staff record at all), so the card's
+  // real fields (identity number, staff number, department) come from
+  // the same endpoint /portal/staff/identity/ already uses. A failure
+  // here (no staff cookie, or a 401) just leaves the credential panel
+  // hidden — never an error the Executive has to do anything about.
+  async function loadExecutiveCredential(){
+    var card = document.querySelector('[data-founder-credential-card]');
+    var mount = document.querySelector('[data-id-card-mount]');
+    if(!card || !mount || !window.SHRSIdCard) return;
+    try{
+      var res = await fetch('/api/portal/staff/me', { credentials: 'same-origin' });
+      if(!res.ok) return;
+      var data = await res.json();
+      var staff = data.staff;
+      if(!staff || !staff.identityNo) return;
+      window.SHRSIdCard.render(mount, {
+        kind: 'founder',
+        themeKey: 'founder',
+        fullName: staff.fullName,
+        identityNo: staff.identityNo,
+        roleLabel: staff.positionTitle || 'Founder & CEO',
+        subtitle: staff.institution ? staff.institution.name : 'Sultan Hanafi Royal Schools',
+        status: staff.status ? staff.status.charAt(0).toUpperCase() + staff.status.slice(1) : null,
+        details: [
+          { label: 'Staff No.', value: staff.staffNo },
+          { label: 'Date Joined', value: staff.dateJoined ? new Date(staff.dateJoined).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : null },
+        ],
+      });
+      card.hidden = false;
+      var row = document.querySelector('.exec-hero-row');
+      if(row) row.classList.add('has-credential');
+    }catch(err){ /* honest no-op — the credential panel simply stays hidden */ }
+  }
+
   function render(data){
     var greeting = greetingLines(data);
     var eyebrowEl = document.querySelector('.exec-welcome-eyebrow');
@@ -653,6 +689,14 @@
         : 'Viewed via the legacy Founder token — sign in with a real Executive-role staff account once one exists.';
       authStatusEl.textContent = whoText + ' · Data generated ' + new Date(data.generatedAt).toLocaleString();
     }
+
+    // Executive Credential — the same rotating 3D ID card js/id-card.js
+    // renders on /portal/staff/identity/, shown here too. Only attempted
+    // for a real signed-in staff account (authMethod 'staff_session') —
+    // the legacy Board token has no staff record behind it to draw a
+    // credential from, so the panel simply stays hidden in that mode
+    // rather than showing an empty or broken card.
+    if(data.authMethod === 'staff_session') loadExecutiveCredential();
 
     var execStatStudentsEl = document.querySelector('[data-exec-stat-students]');
     var execStatAttendanceEl = document.querySelector('[data-exec-stat-attendance]');

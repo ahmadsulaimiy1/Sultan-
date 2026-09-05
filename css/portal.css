@@ -469,7 +469,7 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
     0 10px 22px -12px rgba(var(--lv-w04,20,13,4),0.22),
     inset 0 1px 0 rgba(var(--lv-bev,255,255,255),0.65),
     inset 0 0 0 1px rgba(var(--lv-gs,198,161,91),0.16);
-  margin-bottom:28px;
+  margin-bottom:18px;
   position:relative;
 }
 /* Luxury Material System (Imperial Luxury Experience Directive) — a
@@ -493,7 +493,7 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
    deliberate solid-navy "premium accent" moments per page. */
 .portal-child-head{
   position:relative;background:linear-gradient(180deg,var(--portal-card) 0%,var(--ivory-bg) 100%);
-  color:var(--portal-heading);padding:24px 28px 22px 32px;border-bottom:2px solid var(--gold);
+  color:var(--portal-heading);padding:16px 24px 15px 28px;border-bottom:2px solid var(--gold);
 }
 .portal-child-head::before{
   content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:4px;
@@ -512,10 +512,10 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
    background as a jarring solid block. Each .portal-stat carries its
    own border instead, so it never depends on the row being full. */
 .portal-stats{display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:1px;}
-.portal-stat{background:var(--ivory-bg);padding:22px 24px;border:1px solid var(--line);border-top:2px solid var(--gold);}
+.portal-stat{background:var(--ivory-bg);padding:14px 18px;border:1px solid var(--line);border-top:2px solid var(--gold);}
 .portal-stat .label{font-size:0.76rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-soft);}
 .portal-stat .value{font-family:'Cinzel','Amiri',serif;font-size:1.55rem;color:var(--portal-heading);margin-top:5px;font-variant-numeric:tabular-nums;}
-.portal-results{padding:24px 26px;}
+.portal-results{padding:16px 20px;}
 .portal-results h3{font-family:'Cinzel','Amiri',serif;font-size:var(--h4-size,1.3rem);color:var(--portal-heading);margin:0 0 12px;}
 .portal-results-scroll{overflow-x:auto;}
 .portal-results table{width:100%;min-width:520px;border-collapse:collapse;font-size:0.86rem;}
@@ -641,7 +641,7 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
   box-shadow:0 32px 64px -30px rgba(var(--lv-w04,20,13,4),0.34),
     0 10px 22px -12px rgba(var(--lv-w04,20,13,4),0.22),
     inset 0 1px 0 rgba(var(--lv-bev,255,255,255),0.65);
-  padding:32px 34px;margin-bottom:28px;position:relative;
+  padding:22px 26px;margin-bottom:18px;position:relative;
   transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease;
 }
 /* Restrained hover lift — the whole card, not just its contents. */
@@ -669,8 +669,8 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
   animation:gold-edge-sweep 20s linear infinite;
 }
 @media (prefers-reduced-motion:reduce){.pfd-section::before{animation:none;}}
-.pfd-section h2{font-family:'Cinzel','Amiri',serif;font-size:var(--h4-size,1.3rem);margin:0 0 14px;color:var(--portal-heading);}
-.pfd-subhead{font-family:'Cinzel','Amiri',serif;font-size:0.82rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--portal-heading);margin:20px 0 10px;}
+.pfd-section h2{font-family:'Cinzel','Amiri',serif;font-size:var(--h4-size,1.3rem);margin:0 0 10px;color:var(--portal-heading);}
+.pfd-subhead{font-family:'Cinzel','Amiri',serif;font-size:0.82rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--portal-heading);margin:16px 0 8px;}
 .pfd-note{font-size:0.8rem;color:var(--ink-soft);margin-top:10px;}
 .pfd-bars{display:flex;flex-direction:column;gap:12px;}
 .pfd-bar-row{font-size:0.82rem;padding:4px 6px;margin:-4px -6px;border-radius:6px;transition:background .2s ease;}
@@ -1384,7 +1384,7 @@ select.registrar-search-row-select{
   background:radial-gradient(650px 260px at 88% -20%, rgba(var(--lv-gbs,233,206,138),0.14), transparent 65%),
     linear-gradient(135deg, var(--navy-bg) 0%, var(--navy-deep-bg) 100%);
   color:var(--ivory);border:1px solid var(--gold);border-radius:calc(var(--btn-radius) - 2px);
-  padding:40px 44px;margin-bottom:30px;
+  padding:26px 32px;margin-bottom:20px;
   box-shadow:0 34px 68px -28px rgba(0,0,0,0.5),inset 0 1px 0 rgba(var(--lv-bev,255,255,255),0.08);
 }
 /* Ambient gold system: the existing diagonal foil pattern now drifts
@@ -1446,8 +1446,8 @@ select.registrar-search-row-select{
 [dir="rtl"] .exec-welcome::after{right:auto;left:-30px;}
 @media (max-width:640px){.exec-welcome::after{width:170px;height:151px;right:-20px;}
   [dir="rtl"] .exec-welcome::after{left:-20px;}}
-.exec-welcome-eyebrow{font-size:0.8rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:8px;}
-.exec-welcome h1{font-family:'Cinzel','Amiri',serif;font-size:1.7rem;line-height:1.15;margin:0 0 18px;color:#fff;position:relative;padding-bottom:12px;}
+.exec-welcome-eyebrow{font-size:0.8rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:6px;}
+.exec-welcome h1{font-family:'Cinzel','Amiri',serif;font-size:1.55rem;line-height:1.15;margin:0 0 12px;color:#fff;position:relative;padding-bottom:8px;}
 /* Ceremonial letterhead rule (Imperial Luxury Experience Directive):
    every institutional office title is framed the way a royal decree or
    an Oxford/Harvard annual report frames its own title — a heavier
@@ -1463,9 +1463,9 @@ select.registrar-search-row-select{
   opacity:0.92;
 }
 [dir="rtl"] .exec-welcome h1::after{left:auto;right:1px;}
-.exec-welcome-role{font-size:0.92rem;color:rgba(var(--lv-w00,248,244,233),0.78);margin-bottom:6px;}
-.exec-welcome-motto{font-family:'Cormorant Garamond','Amiri',serif;font-style:italic;font-size:0.98rem;color:var(--gold-bright);margin-bottom:22px;}
-.exec-welcome-stats{display:flex;flex-wrap:wrap;gap:20px 30px;padding-top:20px;border-top:1px solid rgba(var(--lv-gbs,233,206,138),0.25);}
+.exec-welcome-role{font-size:0.92rem;color:rgba(var(--lv-w00,248,244,233),0.78);margin-bottom:4px;}
+.exec-welcome-motto{font-family:'Cormorant Garamond','Amiri',serif;font-style:italic;font-size:0.98rem;color:var(--gold-bright);margin-bottom:14px;}
+.exec-welcome-stats{display:flex;flex-wrap:wrap;gap:14px 30px;padding-top:14px;border-top:1px solid rgba(var(--lv-gbs,233,206,138),0.25);}
 .exec-welcome-stat{display:flex;flex-direction:column;}
 .exec-welcome-stat .value{font-family:'Cinzel','Amiri',serif;font-size:1.4rem;color:var(--gold-bright);}
 .exec-welcome-stat .label{font-size:0.74rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:rgba(var(--lv-w00,248,244,233),0.75);}
@@ -1478,28 +1478,31 @@ select.registrar-search-row-select{
   border:1px solid rgba(var(--lv-gbs,233,206,138),0.4);border-radius:999px;background:rgba(0,0,0,0.15);
   font-family:'Cinzel','Amiri',serif;font-size:0.76rem;letter-spacing:0.05em;
 }
-/* Founder hero photograph — the Founder page is the one dashboard that
-   doesn't load css/portal-command.css (its layout predates that file and
-   still uses the rest of this stylesheet's own .exec-welcome), so it never
-   got the photographic backdrop the "rich" command pages already carry.
-   Restated here, scoped to this one page, rather than loading the whole
-   portal-command.css file (a separate --cmd-* card/table system this page
-   doesn't otherwise use) just for one background. Same dark-gradient-over-
-   photo ratio portal-command.css already ships on 72 live pages. The
-   sweep/corner-frame background layers above are for the plain navy
-   ground; over a photo they're dropped rather than force-fit onto a
-   mismatched layer count, so the animation is turned off here too. */
-body[data-atmosphere="founder"] .exec-welcome{
-  animation:none;
-  background-image:
-    linear-gradient(168deg, rgba(20,13,4,.90) 0%, rgba(20,13,4,.72) 46%, rgba(10,7,2,.95) 100%),
-    url('/assets/images/campus/campus-frontage.jpg');
-  background-size:auto, cover;
-  background-position:0 0, center 34%;
-  background-repeat:no-repeat, no-repeat;
-}
-@media (prefers-reduced-motion:reduce){body[data-atmosphere="founder"] .exec-welcome{animation:none;}}
 .exec-welcome-health .dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto;animation:health-dot-pulse 2.4s ease-in-out infinite;}
+/* Hero row — the welcome banner beside its own digital credential,
+   rather than the card stacked as a further full-width section below.
+   Sits the two side by side on a wide screen (the card takes only the
+   width it needs, min:0 lets the hero's own text still wrap/truncate
+   normally) and stacks them on a narrow one. */
+.exec-hero-row{display:grid;grid-template-columns:1fr;gap:18px;margin-bottom:18px;align-items:start;}
+.exec-hero-row .exec-welcome{margin-bottom:0;min-width:0;}
+/* Two columns only once a credential card actually has something in it
+   (.has-credential, added by JS alongside removing the card's [hidden]) —
+   otherwise a single lone .exec-welcome would sit in a two-column grid
+   with an empty second track beside it, e.g. the Founder page's legacy
+   Board-token path, which has no staff record to draw a card from. */
+@media (min-width:900px){.exec-hero-row.has-credential{grid-template-columns:1fr minmax(340px,400px);}}
+.exec-credential-card{padding:20px 14px 16px;text-align:center;margin-bottom:0;}
+/* .portal-child-card's shared overflow:hidden (its own inset-bevel
+   effect) would clip the id card at its usual 360px width the moment
+   this narrower panel is anything less than a generous ~400px, so it's
+   capped smaller here rather than widening every credential panel to
+   chase the card's normal size. */
+.exec-credential-card .id-card-3d{width:min(300px, 100%);}
+.exec-credential-label{
+  font-family:'Cinzel','Amiri',serif;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--portal-heading);margin:0 0 14px;
+}
 .exec-welcome-health.is-excellent .dot{background:#7fd99a;box-shadow:0 0 8px #7fd99a;}
 .exec-welcome-health.is-strong .dot{background:var(--gold-bright);box-shadow:0 0 8px var(--gold-bright);}
 .exec-welcome-health.is-developing .dot{background:var(--terracotta);box-shadow:0 0 8px var(--terracotta);}

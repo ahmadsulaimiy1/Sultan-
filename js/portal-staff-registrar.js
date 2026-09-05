@@ -1050,6 +1050,30 @@
       }
       var data = await res.json();
       if(!res.ok) throw new Error(data.error || 'Could not load your staff session.');
+
+      // Digital Credential — the same rotating 3D ID card js/id-card.js
+      // already renders on /portal/staff/identity/, shown here too so the
+      // Registrar's own credential sits beside the office they're
+      // actually looking at, not only on a separate identity page.
+      var idCardMount = document.querySelector('[data-id-card-mount]');
+      if(idCardMount && window.SHRSIdCard && data.staff.identityNo){
+        var isFounder = (data.roles || []).some(function(r){ return r.roleCode === 'EXE'; });
+        window.SHRSIdCard.render(idCardMount, {
+          kind: isFounder ? 'founder' : 'staff',
+          themeKey: isFounder ? 'founder' : 'registrar',
+          fullName: data.staff.fullName,
+          identityNo: data.staff.identityNo,
+          roleLabel: data.staff.positionTitle || 'Staff',
+          subtitle: data.staff.institution ? data.staff.institution.name : 'Sultan Hanafi Royal Schools',
+          status: data.staff.status ? data.staff.status.charAt(0).toUpperCase() + data.staff.status.slice(1) : null,
+          details: [
+            { label: 'Staff No.', value: data.staff.staffNo },
+            { label: 'Department', value: data.staff.department ? data.staff.department.name : null },
+            { label: 'Date Joined', value: data.staff.dateJoined ? new Date(data.staff.dateJoined).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : null },
+          ],
+        });
+      }
+
       loadingEl.hidden = true;
       contentEl.hidden = false;
       if(window.SHRSExecArrival){

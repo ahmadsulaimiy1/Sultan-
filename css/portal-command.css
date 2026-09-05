@@ -781,11 +781,9 @@ body.portal-body .portal-child-card a:hover { color: var(--cmd-espresso); }
 body.portal-body .exec-welcome {
   position: relative; isolation: isolate; overflow: hidden;
   border-radius: 20px;
-  padding: clamp(30px, 5vw, 62px) clamp(22px, 4vw, 58px);
+  padding: clamp(22px, 3.4vw, 40px) clamp(20px, 3vw, 40px);
   border: 1px solid rgba(198,161,91,.42);
-  background:
-    linear-gradient(168deg, rgba(34,23,9,.90) 0%, rgba(34,23,9,.70) 44%, rgba(20,13,4,.94) 100%),
-    url('/assets/images/campus/campus-frontage.jpg') center 34% / cover no-repeat;
+  background: linear-gradient(168deg, #221709 0%, #1A1206 46%, #140D04 100%);
   box-shadow: 0 30px 66px -28px rgba(40,26,8,.55);
 }
 body.portal-body .exec-welcome::before,
@@ -904,22 +902,11 @@ body.portal-body .exec-welcome-stat .label {
   content: ''; width: 26px; height: 1px; background: var(--cmd-foil-soft);
 }
 
-/* each office opens on its own photograph — --cmd-office-photo is the
-   hook; only the Registrar's Office actually sets it below, using the
-   other real campus photograph on file, so it reads as its own place
-   rather than the same shared frontage shot every other command page
-   shows. The rest keep the frontage default until more photography
-   exists to set the others honestly rather than repeating one image
-   under a variable that implies each office has its own. */
-body.portal-body[data-office-page="registrar"] {
-  --cmd-office-photo: url('/assets/images/gallery/campus-gate.jpg');
-}
-body.portal-body .exec-welcome {
-  background:
-    linear-gradient(168deg, rgba(34,23,9,.90) 0%, rgba(34,23,9,.70) 44%, rgba(20,13,4,.94) 100%),
-    var(--cmd-office-photo, url('/assets/images/campus/campus-frontage.jpg'))
-      center 34% / cover no-repeat !important;
-}
+/* No photography in the hero — the founder was explicit: no campus/school
+   photographs anywhere in the portals. Plain espresso ground, same as the
+   base rule above; kept as its own rule (rather than deleted outright)
+   only so the office-accent hook stays in one obvious place if a purely
+   textural (non-photographic) per-office treatment is wanted later. */
 /* the hero's own engraved field, very faint, under the type */
 body.portal-body .exec-welcome > * { position: relative; z-index: 1; }
 
