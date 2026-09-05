@@ -783,9 +783,46 @@ body.portal-body .exec-welcome {
   border-radius: 20px;
   padding: clamp(22px, 3.4vw, 40px) clamp(20px, 3vw, 40px);
   border: 1px solid rgba(198,161,91,.42);
-  background: linear-gradient(168deg, #221709 0%, #1A1206 46%, #140D04 100%);
+  /* THE SHRS LATTICE (Phase 7) — the same crossing-hairline-diagonal +
+     travelling-spotlight signature as css/portal.css's own .exec-welcome
+     (see the long comment there for why this is stated twice: this
+     rule, not that one, wins on the 72 pages that load this file, and
+     ::before/::after here are already the corner-frame decoration
+     below, so the lattice has to live on the element's own background
+     rather than fight over a pseudo-element). --lattice-x and the
+     shrs-lattice-glow keyframes are declared once, in portal.css, and
+     used here since both files load together on every page that needs
+     this.
+
+     Layer order: the opaque base gradient must be LAST — CSS paints the
+     first-listed background-image layer on top, so an earlier pass that
+     put the opaque layer first silently hid the spotlight/diagonals
+     entirely underneath it (confirmed by sampling raw pixel values off
+     a screenshot: zero variance until the base moved to the end).
+     Diagonal opacity is .32, not a fainter value — under ~.20 alpha a
+     1px hard-stop repeating line measures only a couple of RGB units of
+     contrast against this ground: real in the pixels, invisible in
+     practice. --lattice-glow/--lattice-line default to gold; the
+     Atmosphere System (css/portal.css) overrides them per office. */
+  background-image:
+    radial-gradient(420px 280px at var(--lattice-x,-10%) 45%, var(--lattice-glow, rgba(233,206,138,.22)), transparent 68%),
+    repeating-linear-gradient(45deg, var(--lattice-line, rgba(233,206,138,.32)) 0 1.5px, transparent 1.5px 72px),
+    repeating-linear-gradient(-45deg, var(--lattice-line, rgba(233,206,138,.32)) 0 1.5px, transparent 1.5px 72px),
+    linear-gradient(168deg, #221709 0%, #1A1206 46%, #140D04 100%);
+  /* Explicit size/position/repeat so this rule owns all of its own
+     background sub-properties — otherwise, since css/portal.css's own
+     .exec-welcome rule DOES declare background-size/background-position
+     (for its own, differently-counted layer stack), an unrelated cascade
+     rule with no competing declaration silently wins those properties
+     here too, stretching/mispositioning this layer stack (found via
+     screenshot: the hero rendered with its right half transparent). */
+  background-size: auto;
+  background-position: 0 0;
+  background-repeat: no-repeat, repeat, repeat, no-repeat;
+  animation: shrs-lattice-glow 14s ease-in-out infinite;
   box-shadow: 0 30px 66px -28px rgba(40,26,8,.55);
 }
+@media (prefers-reduced-motion: reduce){ body.portal-body .exec-welcome{ animation: none; } }
 body.portal-body .exec-welcome::before,
 body.portal-body .exec-welcome::after {
   content: ''; position: absolute; width: 52px; height: 52px; pointer-events: none;

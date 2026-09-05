@@ -1410,24 +1410,52 @@ select.registrar-search-row-select{
    infinite, barely-perceptible foil drift above. Implemented as an
    extra background layer (not a new element) so every page already
    using .exec-welcome gets it with zero markup changes. */
+@keyframes shrs-lattice-glow{
+  0%,100%{--lattice-x:-10%;}
+  50%{--lattice-x:110%;}
+}
+@property --lattice-x{syntax:'<percentage>';initial-value:-10%;inherits:false;}
+/* THE SHRS LATTICE (Phase 7 — Flagship Luxury Redesign) — the one
+   signature pattern threaded through hero, footer and gateway: two
+   crossing hairline diagonals at architectural scale (72px), the same
+   angle as the crest's own eight-point star, with a soft gold spotlight
+   drifting across them (--lattice-x, a second background layer, not a
+   moving element) so the geometry catches light as it passes.
+
+   Layer order matters here: CSS paints the FIRST background-image layer
+   on top. The navy base gradient is fully opaque, so it has to be LAST
+   or it silently occludes everything listed after it — confirmed by
+   sampling raw pixel values off a screenshot (zero variance from the
+   corner lines/spotlight/lattice until the base gradient was moved to
+   the end of the list). Diagonal opacity is .32, not a fainter value:
+   under ~.20 alpha a 1px hard-stop repeating line measures only a
+   couple of RGB units of contrast against this dark ground — real in
+   the pixels, invisible to the eye.
+
+   --lattice-glow/--lattice-line default to gold; the Atmosphere System
+   below overrides them per office so each dashboard's own accent colour
+   runs through this same geometry instead of a separate pattern. */
 .exec-welcome{
   background-image:linear-gradient(100deg, transparent 30%, rgba(var(--lv-gbs,233,206,138),0.16) 46%, transparent 62%),
     radial-gradient(650px 260px at 88% -20%, rgba(var(--lv-gbs,233,206,138),0.14), transparent 65%),
-    linear-gradient(135deg, var(--navy-bg) 0%, var(--navy-deep-bg) 100%),
     linear-gradient(90deg, var(--gold-bright) 0, var(--gold-bright) 24px, transparent 24px),
     linear-gradient(180deg, var(--gold-bright) 0, var(--gold-bright) 24px, transparent 24px),
     linear-gradient(90deg, var(--gold-bright) 0, var(--gold-bright) 24px, transparent 24px),
-    linear-gradient(180deg, var(--gold-bright) 0, var(--gold-bright) 24px, transparent 24px);
-  background-size:260% 100%, auto, auto, 24px 1.5px, 1.5px 24px, 24px 1.5px, 1.5px 24px;
-  background-position:140% 0, 0 0, 0 0, 18px 18px, 18px 18px, right 18px bottom 18px, right 18px bottom 18px;
-  background-repeat:repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
-  animation:exec-gold-sweep 2.2s ease-out 1.1s 1 both;
+    linear-gradient(180deg, var(--gold-bright) 0, var(--gold-bright) 24px, transparent 24px),
+    radial-gradient(420px 280px at var(--lattice-x,-10%) 45%, var(--lattice-glow, rgba(var(--lv-gbs,233,206,138),.22)), transparent 68%),
+    repeating-linear-gradient(45deg, var(--lattice-line, rgba(var(--lv-gbs,233,206,138),.32)) 0 1.5px, transparent 1.5px 72px),
+    repeating-linear-gradient(-45deg, var(--lattice-line, rgba(var(--lv-gbs,233,206,138),.32)) 0 1.5px, transparent 1.5px 72px),
+    linear-gradient(135deg, var(--navy-bg) 0%, var(--navy-deep-bg) 100%);
+  background-size:260% 100%, auto, 24px 1.5px, 1.5px 24px, 24px 1.5px, 1.5px 24px, auto, auto, auto, auto;
+  background-position:140% 0, 0 0, 18px 18px, 18px 18px, right 18px bottom 18px, right 18px bottom 18px, 0 0, 0 0, 0 0, 0 0;
+  background-repeat:repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat, no-repeat;
+  animation:exec-gold-sweep 2.2s ease-out 1.1s 1 both, shrs-lattice-glow 14s ease-in-out infinite;
 }
 @keyframes exec-gold-sweep{
-  0%{background-position:140% 0, 0 0, 0 0, 18px 18px, 18px 18px, right 18px bottom 18px, right 18px bottom 18px;}
-  100%{background-position:-40% 0, 0 0, 0 0, 18px 18px, 18px 18px, right 18px bottom 18px, right 18px bottom 18px;}
+  0%{background-position:140% 0, 0 0, 18px 18px, 18px 18px, right 18px bottom 18px, right 18px bottom 18px, 0 0, 0 0, 0 0, 0 0;}
+  100%{background-position:-40% 0, 0 0, 18px 18px, 18px 18px, right 18px bottom 18px, right 18px bottom 18px, 0 0, 0 0, 0 0, 0 0;}
 }
-@media (prefers-reduced-motion:reduce){.exec-welcome{animation:none;background-position:-40% 0, 0 0, 0 0, 18px 18px, 18px 18px, right 18px bottom 18px, right 18px bottom 18px;}}
+@media (prefers-reduced-motion:reduce){.exec-welcome{animation:none;background-position:-40% 0, 0 0, 18px 18px, 18px 18px, right 18px bottom 18px, right 18px bottom 18px, 0 0, 0 0, 0 0, 0 0;}}
 @media (max-width:640px){.exec-welcome{background-image:linear-gradient(100deg, transparent 30%, rgba(var(--lv-gbs,233,206,138),0.16) 46%, transparent 62%),
     radial-gradient(650px 260px at 88% -20%, rgba(var(--lv-gbs,233,206,138),0.14), transparent 65%),
     linear-gradient(135deg, var(--navy-bg) 0%, var(--navy-deep-bg) 100%);
@@ -1773,9 +1801,23 @@ body.portal-body[data-atmosphere] .office-tab.is-active{border-bottom-color:var(
 body.portal-body[data-atmosphere] .portal-child-head{border-bottom-color:var(--atmos);}
 body.portal-body[data-atmosphere] .portal-child-head::before,
 body.portal-body[data-atmosphere] .pfd-section::before{background:linear-gradient(180deg,var(--atmos-bright) 0%,var(--atmos) 100%);}
-body.portal-body[data-atmosphere] .exec-welcome{border-color:var(--atmos);}
+/* Each office's own atmosphere colour runs through the same SHRS
+   Lattice geometry as the flagship pages — "own identity, inherits the
+   flagship language" — rather than a different pattern per office.
+   Overriding the two --lattice-* variables the main .exec-welcome rule
+   already reads (instead of repainting a layer on ::before) is the fix
+   for a real bug found here: ::before on this element is already
+   claimed, at higher specificity, by css/portal-command.css's 52×52px
+   corner-frame decoration on the 72 pages that load that file, so a
+   background-image stated on ::before renders squeezed into that tiny
+   corner box, not across the hero. Setting variables on the element
+   itself has no such box to fight over. */
+body.portal-body[data-atmosphere] .exec-welcome{
+  border-color:var(--atmos);
+  --lattice-glow: color-mix(in srgb, var(--atmos-bright) 45%, transparent);
+  --lattice-line: color-mix(in srgb, var(--atmos-bright) 35%, transparent);
+}
 body.portal-body[data-atmosphere] .exec-welcome-eyebrow{color:var(--atmos-bright);}
-body.portal-body[data-atmosphere] .exec-welcome::before{background-image:repeating-linear-gradient(45deg, var(--atmos-bright) 0 1px, transparent 1px 32px);}
 body.portal-body[data-atmosphere] .exec-welcome-stat .value{color:var(--atmos-bright);}
 body.portal-body[data-atmosphere] .portal-child-card{transition:border-color .25s ease,transform .25s ease,box-shadow .25s ease;}
 body.portal-body[data-atmosphere] .portal-child-card:hover{
