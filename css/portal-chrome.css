@@ -412,7 +412,16 @@ html[data-pc-theme="royal"] .pch-standing-d{color:rgba(198,161,91,.8);}
 .pch-foot{
   position:relative;isolation:isolate;margin-top:auto;
   padding:34px 28px 26px;
-  background:linear-gradient(168deg,var(--pearl) 0%,var(--pearl-2) 100%);
+  /* THE SHRS LATTICE (Phase 7, Scope D) — same crossing-hairline motif
+     as the executive hero (css/portal.css .exec-welcome), tuned for a
+     light ground: the muted --lv-gs gold rather than --lv-gbs, which
+     is close enough to pearl's own lightness to disappear on white.
+     Opaque base last — see the hero's own comment for why (an earlier
+     pass had this backwards and the lattice silently vanished). */
+  background:
+    repeating-linear-gradient(45deg, rgba(var(--lv-gs,198,161,91),.16) 0 1.5px, transparent 1.5px 72px),
+    repeating-linear-gradient(-45deg, rgba(var(--lv-gs,198,161,91),.16) 0 1.5px, transparent 1.5px 72px),
+    linear-gradient(168deg,var(--pearl) 0%,var(--pearl-2) 100%);
   border-top:1px solid var(--pearl-line);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.6);}
 .pch-foot::before{
@@ -452,7 +461,10 @@ html[data-pc-theme="royal"] .pch-standing-d{color:rgba(198,161,91,.8);}
 /* ---- Dark/Royal theme: the original espresso foot, unchanged ------- */
 html[data-pc-theme="dark"] .pch-foot,
 html[data-pc-theme="royal"] .pch-foot{
-  background:linear-gradient(168deg,#241708 0%,#170E04 100%);
+  background:
+    repeating-linear-gradient(45deg, rgba(233,206,138,.22) 0 1.5px, transparent 1.5px 72px),
+    repeating-linear-gradient(-45deg, rgba(233,206,138,.22) 0 1.5px, transparent 1.5px 72px),
+    linear-gradient(168deg,#241708 0%,#170E04 100%);
   border-top:1px solid rgba(233,206,138,.4);
   box-shadow:inset 0 1px 0 rgba(233,206,138,.16);}
 html[data-pc-theme="dark"] .pch-foot::before,
@@ -630,9 +642,23 @@ html[data-pc-theme="royal"] .pch-now-link:focus-visible{color:#FFF6DF;border-col
   max-width:1180px;margin:16px auto 0;display:flex;align-items:center;
   justify-content:space-between;gap:14px 26px;flex-wrap:wrap;}
 .pch-meta{
-  display:flex;flex-wrap:wrap;gap:4px 20px;
+  display:flex;flex-wrap:wrap;gap:4px 0;
   font-size:.8rem;color:var(--pearl-ink-2);}
 .pch-meta a{color:inherit;}
+/* Platinum/gold dividers between colophon items, instead of a bare
+   gap — each item is its own <span> (see js/portal-shell.js), so a
+   thin vertical rule on every item but the first reads as one ruled
+   line, not a repeated border. Padding replaces the old flex gap so
+   the rule sits centred in the same 20px breathing room. */
+.pch-meta > span{position:relative;padding-inline:10px;}
+.pch-meta > span:first-child{padding-inline-start:0;}
+.pch-meta > span::before{
+  content:"";position:absolute;inset-inline-start:0;top:2px;bottom:2px;width:1px;
+  background:linear-gradient(180deg,transparent,var(--pearl-line,rgba(198,161,91,.34)) 30%,var(--pearl-line,rgba(198,161,91,.34)) 70%,transparent);}
+.pch-meta > span:first-child::before{display:none;}
+html[data-pc-theme="dark"] .pch-meta > span::before,
+html[data-pc-theme="royal"] .pch-meta > span::before{
+  background:linear-gradient(180deg,transparent,rgba(233,206,138,.32) 30%,rgba(233,206,138,.32) 70%,transparent);}
 /* A seal, not a dashed placeholder box. */
 .pch-badge{
   font-family:var(--font-label,'Cinzel',serif);font-size:.66rem;font-weight:600;letter-spacing:.14em;
