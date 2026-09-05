@@ -23,21 +23,36 @@
    reader recognises before they have read a word was missing.
 
    It is the deepest tone on the page, under the masthead rather than
-   over it, so the crest line reads as lifted off it. Stated against
-   this band's own ground and nothing else: the ground is written here,
-   in this file, in every edition, so there is no theme underneath it to
-   be wrong about. That is the fifth time that pattern has cost
-   something — see docs/measuring-contrast-honestly.md.
+   over it, so the crest line reads as lifted off it.
+
+   Phase 5 (Founder redesign directive): the whole chrome moves from
+   "espresso in every edition" to matching the site's own default —
+   Light theme + Ivory livery is "polished, white, gold accent"
+   everywhere else on the site (css/liveries.css's own description of
+   Ivory), and .pfd-section/.portal-child-card already render that way;
+   only this injected chrome never read the theme at all. The fix is
+   NOT "make it livery-aware" (a colour-palette swap, never the
+   documented failure mode) — it is light-by-default, exactly like
+   css/masthead.css's own `.nav-mega-item` (light text on light,
+   overridden only under [data-pc-theme="dark"|"royal"]). So: every
+   declaration below that used to be unconditional is now scoped to
+   those two dark themes, byte-for-byte unchanged from before this
+   phase — a visitor on Coffee/Sapphire/whatever-livery Dark or Royal
+   theme sees exactly what they saw yesterday. The default (Light
+   theme, any livery) gets a new, separately-stated set of colours
+   right below, per docs/measuring-contrast-honestly.md's rule: stated
+   for the ground it actually stands on, not inherited from a token
+   that happens to resolve correctly today.
    ------------------------------------------------------------------- */
 .pch-strip{
   position:relative;isolation:isolate;
-  background:linear-gradient(180deg,#150C03 0%,#1B1106 100%);
-  border-bottom:1px solid rgba(233,206,138,.14);
+  background:linear-gradient(180deg,var(--ivory-bg) 0%,var(--portal-card) 100%);
+  border-bottom:1px solid var(--line);
   padding:0 28px;}
 .pch-strip::after{
   content:"";position:absolute;inset-inline:0;bottom:0;height:1px;pointer-events:none;
-  background:linear-gradient(90deg,transparent,rgba(198,161,91,.34) 30%,
-    rgba(198,161,91,.34) 70%,transparent);}
+  background:linear-gradient(90deg,transparent,var(--gold) 30%,var(--gold) 70%,transparent);
+  opacity:.5;}
 .pch-strip-inner{
   max-width:1180px;margin:0 auto;min-height:34px;
   display:flex;align-items:center;justify-content:center;
@@ -45,24 +60,20 @@
 .pch-strip-item{
   display:inline-flex;align-items:center;gap:7px;min-width:0;
   font-size:.72rem;letter-spacing:.02em;line-height:1;
-  color:rgba(233,206,138,.82);}
-.pch-strip-icon{flex:0 0 auto;opacity:.7;}
-/* The time is the one thing here that changes every second, so it is set in
-   the figure face at a fixed advance — otherwise the whole band shuffles
-   sideways once a second, which is the cheapest-looking thing a header can
-   do. */
+  color:var(--ink-soft);}
+.pch-strip-icon{flex:0 0 auto;opacity:.7;color:var(--gold-bright,var(--gold));}
 .pch-strip-time{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;}
 .pch-strip-sep{
   flex:0 0 auto;width:1px;height:12px;
-  background:linear-gradient(180deg,transparent,rgba(198,161,91,.45),transparent);}
+  background:linear-gradient(180deg,transparent,var(--line),transparent);}
 .pch-strip-link{
-  text-decoration:none;position:relative;padding-bottom:2px;
+  text-decoration:none;position:relative;padding-bottom:2px;color:var(--ink-soft);
   transition:color .3s ease;}
 .pch-strip-link::after{
   content:"";position:absolute;inset-inline-start:0;bottom:0;height:1px;width:100%;
-  background:var(--gold-bright,#E9CE8A);transform:scaleX(0);transform-origin:inline-start;
+  background:var(--gold-bright,var(--gold));transform:scaleX(0);transform-origin:inline-start;
   transition:transform .38s cubic-bezier(.16,.8,.24,1);}
-.pch-strip-link:hover,.pch-strip-link:focus-visible{color:#FFF6DF;}
+.pch-strip-link:hover,.pch-strip-link:focus-visible{color:var(--portal-heading);}
 .pch-strip-link:hover::after,.pch-strip-link:focus-visible::after{transform:scaleX(1);}
 @media (max-width:620px){
   .pch-strip{padding:0 14px;}
@@ -70,16 +81,53 @@
   .pch-strip-item{font-size:.66rem;letter-spacing:0;}
 }
 
-/* ---- The head ------------------------------------------------------ */
+/* ---- Dark/Royal theme: the original espresso band, unchanged ------- */
+html[data-pc-theme="dark"] .pch-strip,
+html[data-pc-theme="royal"] .pch-strip{
+  background:linear-gradient(180deg,#150C03 0%,#1B1106 100%);
+  border-bottom:1px solid rgba(233,206,138,.14);}
+html[data-pc-theme="dark"] .pch-strip::after,
+html[data-pc-theme="royal"] .pch-strip::after{
+  background:linear-gradient(90deg,transparent,rgba(198,161,91,.34) 30%,
+    rgba(198,161,91,.34) 70%,transparent);
+  opacity:1;}
+html[data-pc-theme="dark"] .pch-strip-item,
+html[data-pc-theme="royal"] .pch-strip-item{color:rgba(233,206,138,.82);}
+html[data-pc-theme="dark"] .pch-strip-icon,
+html[data-pc-theme="royal"] .pch-strip-icon{opacity:.7;color:inherit;}
+html[data-pc-theme="dark"] .pch-strip-sep,
+html[data-pc-theme="royal"] .pch-strip-sep{
+  background:linear-gradient(180deg,transparent,rgba(198,161,91,.45),transparent);}
+html[data-pc-theme="dark"] .pch-strip-link,
+html[data-pc-theme="royal"] .pch-strip-link{color:inherit;}
+html[data-pc-theme="dark"] .pch-strip-link::after,
+html[data-pc-theme="royal"] .pch-strip-link::after{background:#E9CE8A;}
+html[data-pc-theme="dark"] .pch-strip-link:hover,
+html[data-pc-theme="dark"] .pch-strip-link:focus-visible,
+html[data-pc-theme="royal"] .pch-strip-link:hover,
+html[data-pc-theme="royal"] .pch-strip-link:focus-visible{color:#FFF6DF;}
+
+/* ---- The head ------------------------------------------------------
+   Light-by-default (see the note above the calendar band); the original
+   espresso bar moves to the dark/royal-theme block a little further
+   down, unchanged. ------------------------------------------------- */
 .portal-topbar{
   position:relative;isolation:isolate;
+  background:
+    radial-gradient(700px 160px at 50% -60%,rgba(var(--lv-gbs,233,206,138),.14),transparent 74%),
+    linear-gradient(168deg,var(--ivory-bg) 0%,var(--portal-card) 100%)!important;
+  border-bottom:1px solid var(--line)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7),
+             0 14px 30px -26px rgba(60,40,20,.22)!important;
+  padding:0!important;}
+html[data-pc-theme="dark"] .portal-topbar,
+html[data-pc-theme="royal"] .portal-topbar{
   background:
     radial-gradient(700px 160px at 50% -60%,rgba(233,206,138,.20),transparent 74%),
     linear-gradient(168deg,#3B2A1D 0%,#241708 62%,#1C1207 100%)!important;
   border-bottom:1px solid rgba(233,206,138,.45)!important;
   box-shadow:inset 0 1px 0 rgba(233,206,138,.18),
-             0 14px 30px -24px rgba(0,0,0,.9)!important;
-  padding:0!important;}
+             0 14px 30px -24px rgba(0,0,0,.9)!important;}
 
 /* ---- The masthead, in two tiers -------------------------------------
    It was one row: crest, standing line, a theme toggle, a chronometer, an
@@ -115,8 +163,8 @@
 .pch-mast > .pch-utility{
   order:9;flex:0 0 100%;display:flex;align-items:center;flex-wrap:wrap;
   gap:9px 12px;padding:9px 28px;margin:0;
-  border-top:1px solid rgba(233,206,138,.16);
-  background:linear-gradient(180deg,rgba(0,0,0,.22),rgba(0,0,0,0));}
+  border-top:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(var(--lv-gs,198,161,91),.06),rgba(var(--lv-gs,198,161,91),0));}
 /* The account controls sit at the far end, away from the navigation. */
 .pch-mast > .pch-utility > .lang-switch-mount{margin-inline-start:auto;}
 
@@ -125,26 +173,26 @@
 .pch-mast .portal-topbar-link{
   font-family:var(--font-label,'Cinzel',serif);font-size:.62rem;letter-spacing:.13em;
   text-transform:uppercase;text-decoration:none;padding:7px 13px;border-radius:99px;
-  border:1px solid rgba(233,206,138,.22);
-  background:linear-gradient(168deg,rgba(233,206,138,.09),rgba(233,206,138,.02));
-  box-shadow:inset 0 1px 0 rgba(255,246,223,.10);
+  border:1px solid var(--line);color:var(--ink-soft);
+  background:linear-gradient(168deg,rgba(var(--lv-gs,198,161,91),.09),rgba(var(--lv-gs,198,161,91),.02));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5);
   transition:border-color .3s ease,background .3s ease,color .3s ease,transform .3s ease;}
 .pch-mast .portal-topbar-link:hover,
 .pch-mast .portal-topbar-link:focus-visible{
-  border-color:rgba(233,206,138,.62);background:rgba(233,206,138,.16);
-  color:#FFF6DF!important;transform:translateY(-1px);}
+  border-color:var(--gold);background:rgba(var(--lv-gs,198,161,91),.16);
+  color:var(--portal-heading)!important;transform:translateY(-1px);}
 .pch-mast .portal-pilot-badge{
   font-family:var(--font-label,'Cinzel',serif);font-size:.6rem;letter-spacing:.15em;
   text-transform:uppercase;padding:7px 14px;border-radius:99px;
   color:#1A1006!important;
-  background:linear-gradient(135deg,#E9CE8A,#C6A15B)!important;
-  border:1px solid rgba(255,246,223,.45)!important;
-  box-shadow:0 6px 14px -8px rgba(140,100,40,.9),inset 0 1px 0 rgba(255,255,255,.4);}
+  background:linear-gradient(135deg,var(--gold-bright),var(--gold))!important;
+  border:1px solid rgba(255,255,255,.6)!important;
+  box-shadow:0 6px 14px -8px rgba(140,100,40,.35),inset 0 1px 0 rgba(255,255,255,.4);}
 .pch-mast > .portal-topbar-calendar{
   font-family:var(--font-label,'Cinzel',serif);font-size:.62rem;letter-spacing:.13em;
   text-transform:uppercase;padding:7px 14px;border-radius:99px;
-  border:1px solid rgba(233,206,138,.28);
-  background:linear-gradient(168deg,rgba(233,206,138,.10),rgba(233,206,138,.02));}
+  border:1px solid var(--line);color:var(--ink-soft);
+  background:linear-gradient(168deg,rgba(var(--lv-gs,198,161,91),.10),rgba(var(--lv-gs,198,161,91),.02));}
 @media (max-width:820px){
   .pch-mast > .portal-brand{padding-inline:16px;}
   .pch-mast > .pch-utility{padding-inline:16px;}
@@ -156,12 +204,36 @@
 }
 .portal-topbar::after{
   content:"";position:absolute;inset-inline:0;bottom:0;height:1px;pointer-events:none;
-  background:linear-gradient(90deg,transparent,
-    rgba(198,161,91,.5) 16%,rgba(255,246,223,.9) 50%,
-    rgba(198,161,91,.5) 84%,transparent);
+  background:linear-gradient(90deg,transparent,var(--gold) 16%,var(--gold-bright) 50%,var(--gold) 84%,transparent);
   transform:scaleX(0);transform-origin:center;
   animation:pch-rule 1.4s cubic-bezier(.16,.8,.24,1) .2s forwards;}
 @keyframes pch-rule{to{transform:scaleX(1);}}
+
+/* ---- Dark/Royal theme: the original espresso working tier, unchanged */
+html[data-pc-theme="dark"] .pch-mast > .pch-utility,
+html[data-pc-theme="royal"] .pch-mast > .pch-utility{
+  border-top:1px solid rgba(233,206,138,.16);
+  background:linear-gradient(180deg,rgba(0,0,0,.22),rgba(0,0,0,0));}
+html[data-pc-theme="dark"] .pch-mast .portal-topbar-link,
+html[data-pc-theme="royal"] .pch-mast .portal-topbar-link{
+  border:1px solid rgba(233,206,138,.22);color:inherit;
+  background:linear-gradient(168deg,rgba(233,206,138,.09),rgba(233,206,138,.02));
+  box-shadow:inset 0 1px 0 rgba(255,246,223,.10);}
+html[data-pc-theme="dark"] .pch-mast .portal-topbar-link:hover,
+html[data-pc-theme="dark"] .pch-mast .portal-topbar-link:focus-visible,
+html[data-pc-theme="royal"] .pch-mast .portal-topbar-link:hover,
+html[data-pc-theme="royal"] .pch-mast .portal-topbar-link:focus-visible{
+  border-color:rgba(233,206,138,.62);background:rgba(233,206,138,.16);
+  color:#FFF6DF!important;}
+html[data-pc-theme="dark"] .pch-mast > .portal-topbar-calendar,
+html[data-pc-theme="royal"] .pch-mast > .portal-topbar-calendar{
+  border:1px solid rgba(233,206,138,.28);color:inherit;
+  background:linear-gradient(168deg,rgba(233,206,138,.10),rgba(233,206,138,.02));}
+html[data-pc-theme="dark"] .portal-topbar::after,
+html[data-pc-theme="royal"] .portal-topbar::after{
+  background:linear-gradient(90deg,transparent,
+    rgba(198,161,91,.5) 16%,rgba(255,246,223,.9) 50%,
+    rgba(198,161,91,.5) 84%,transparent);}
 
 /* ---- The lockup ----------------------------------------------------
    The crest beside two lines, which is what the school's masthead has
@@ -203,18 +275,35 @@
    the school's own name vanished out of its own masthead for every reader on
    the default edition. Caught in a screenshot, not in a stylesheet: the crop
    taken without a stored preference looked perfect.
-     Restated here against the ground it actually stands on, and stated for
-   all three editions rather than for the two that happen to be dark — which
-   is the same correction, in the same words, as the fifth time. See
-   docs/measuring-contrast-honestly.md. */
+     Phase 5: the bar itself is no longer espresso "in every edition" —
+   the founder asked for light-by-default chrome, matching the site's
+   own Light+Ivory default everywhere else. So this gradient now also
+   needs stating twice, exactly like the marketing masthead already
+   does for its own Clear edition (css/prestige.css:4152-4154,
+   `html[data-pc-theme="light"] .brand-text .line1` — coffee → gold →
+   coffee). Copied here rather than left to cross-file cascade order,
+   per this file's own rule: restate for the ground actually stood on. */
 .portal-brand .line1{
+  background-image:linear-gradient(100deg,
+    rgb(var(--lv-cf2s,51,40,28)) 30%,
+    rgb(var(--lv-gt2s,138,106,47)) 45%,
+    rgb(var(--lv-cf2s,51,40,28)) 60%)!important;
+  -webkit-text-fill-color:transparent!important;color:transparent!important;}
+@media (prefers-reduced-motion:reduce){
+  .portal-brand .line1{
+    background:none!important;-webkit-text-fill-color:rgb(var(--lv-cf2,51,40,28))!important;
+    color:rgb(var(--lv-cf2,51,40,28))!important;}
+}
+html[data-pc-theme="dark"] .portal-brand .line1,
+html[data-pc-theme="royal"] .portal-brand .line1{
   background-image:linear-gradient(100deg,
     rgb(var(--lv-wh,255,255,255)) 30%,
     var(--gold-bright,#E9CE8A) 45%,
     rgb(var(--lv-wh,255,255,255)) 60%)!important;
   -webkit-text-fill-color:transparent!important;color:transparent!important;}
 @media (prefers-reduced-motion:reduce){
-  .portal-brand .line1{
+  html[data-pc-theme="dark"] .portal-brand .line1,
+  html[data-pc-theme="royal"] .portal-brand .line1{
     background:none!important;-webkit-text-fill-color:#FFF6DF!important;color:#FFF6DF!important;}
 }
 
@@ -223,24 +312,44 @@
    a RECTANGLE blended with `screen`. Over the marketing header's cream the
    rectangle is a whisper. Over espresso `screen` lifts the whole square and
    the crest sits in a visible tan box — a lit panel behind the school's arms.
-   The ring stays; the rectangle goes. */
+   The ring stays; the rectangle goes. Kept off in every theme now that
+   "cream" is the default rather than the exception: the same lift risk
+   applies to Light as it did to Clear. */
 .portal-brand .crest-shimmer-wrap::after{display:none;}
 .portal-brand .line2{
-  color:rgba(233,206,138,.9)!important;font-size:.55rem!important;letter-spacing:.22em!important;}
+  color:rgb(var(--lv-gt2,138,106,47))!important;font-size:.55rem!important;letter-spacing:.22em!important;}
 [dir="rtl"] .portal-brand .line1{letter-spacing:normal!important;}
 [dir="rtl"] .portal-brand .line2{letter-spacing:normal!important;}
 /* Before the lockup existed the bar's only text was this one span, so it was
    inked here. Anything still arriving as a bare span in the bar — a page that
    brings its own — keeps that ink. */
-.portal-brand > span:not(.brand-text):not(.crest-shimmer-wrap){color:#FFF6DF!important;}
-.portal-topbar-link{color:rgba(var(--lv-p3,247,238,223),.86)!important;}
-.portal-topbar-link:hover{color:#FFF6DF!important;}
+.portal-brand > span:not(.brand-text):not(.crest-shimmer-wrap){color:var(--ink)!important;}
+.portal-topbar-link{color:var(--ink-soft)!important;}
+.portal-topbar-link:hover{color:var(--portal-heading)!important;}
 .portal-logout{
-  border:1px solid rgba(233,206,138,.55)!important;
-  background:linear-gradient(150deg,rgba(233,206,138,.16),rgba(198,161,91,.06))!important;
-  color:#EBD3A0!important;border-radius:99px!important;
+  border:1px solid var(--line)!important;
+  background:linear-gradient(150deg,rgba(var(--lv-gs,198,161,91),.16),rgba(var(--lv-gs,198,161,91),.06))!important;
+  color:rgb(var(--lv-gt2,138,106,47))!important;border-radius:99px!important;
   transition:background .35s ease,border-color .35s ease,color .35s ease;}
 .portal-logout:hover{
+  border-color:var(--gold-bright)!important;color:#1A1006!important;
+  background:linear-gradient(135deg,var(--gold),var(--gold-bright))!important;}
+
+html[data-pc-theme="dark"] .portal-brand .line2,
+html[data-pc-theme="royal"] .portal-brand .line2{color:rgba(233,206,138,.9)!important;}
+html[data-pc-theme="dark"] .portal-brand > span:not(.brand-text):not(.crest-shimmer-wrap),
+html[data-pc-theme="royal"] .portal-brand > span:not(.brand-text):not(.crest-shimmer-wrap){color:#FFF6DF!important;}
+html[data-pc-theme="dark"] .portal-topbar-link,
+html[data-pc-theme="royal"] .portal-topbar-link{color:rgba(var(--lv-p3,247,238,223),.86)!important;}
+html[data-pc-theme="dark"] .portal-topbar-link:hover,
+html[data-pc-theme="royal"] .portal-topbar-link:hover{color:#FFF6DF!important;}
+html[data-pc-theme="dark"] .portal-logout,
+html[data-pc-theme="royal"] .portal-logout{
+  border:1px solid rgba(233,206,138,.55)!important;
+  background:linear-gradient(150deg,rgba(233,206,138,.16),rgba(198,161,91,.06))!important;
+  color:#EBD3A0!important;}
+html[data-pc-theme="dark"] .portal-logout:hover,
+html[data-pc-theme="royal"] .portal-logout:hover{
   border-color:#E9CE8A!important;color:#1A1006!important;
   background:linear-gradient(135deg,#C6A15B,#E9CE8A)!important;}
 
@@ -248,55 +357,60 @@
 .pch-standing{
   display:none;align-items:center;gap:12px;margin-inline:auto;
   font-family:var(--font-label,'Cinzel',serif);font-size:.6rem;letter-spacing:.22em;
-  text-transform:uppercase;white-space:nowrap;color:rgba(233,206,138,.8);}
+  text-transform:uppercase;white-space:nowrap;color:rgb(var(--lv-gt2,138,106,47));}
 @media (min-width:1080px){.pch-standing{display:flex;}}
 .pch-standing::before,.pch-standing::after{
   content:"";width:44px;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(198,161,91,.7));}
-.pch-standing::after{background:linear-gradient(270deg,transparent,rgba(198,161,91,.7));}
+  background:linear-gradient(90deg,transparent,var(--gold));}
+.pch-standing::after{background:linear-gradient(270deg,transparent,var(--gold));}
 /* Two statements and a raised point, as the marketing masthead sets them.
    The gap belongs between the phrases, not around the point. */
 .pch-standing{gap:0 12px;}
-.pch-standing-d{color:rgba(198,161,91,.8);letter-spacing:0;margin-inline:-4px;}
+.pch-standing-d{color:var(--gold);letter-spacing:0;margin-inline:-4px;}
 [dir="rtl"] .pch-standing{letter-spacing:normal;}
 
 .pch-clock{display:none;align-items:center;}
 @media (min-width:760px){.pch-clock{display:inline-flex;}}
 
-/* ---- The foot ------------------------------------------------------ */
+html[data-pc-theme="dark"] .pch-standing,
+html[data-pc-theme="royal"] .pch-standing{color:rgba(233,206,138,.8);}
+html[data-pc-theme="dark"] .pch-standing::before,
+html[data-pc-theme="dark"] .pch-standing::after,
+html[data-pc-theme="royal"] .pch-standing::before,
+html[data-pc-theme="royal"] .pch-standing::after{
+  background:linear-gradient(90deg,transparent,rgba(198,161,91,.7));}
+html[data-pc-theme="dark"] .pch-standing::after,
+html[data-pc-theme="royal"] .pch-standing::after{
+  background:linear-gradient(270deg,transparent,rgba(198,161,91,.7));}
+html[data-pc-theme="dark"] .pch-standing-d,
+html[data-pc-theme="royal"] .pch-standing-d{color:rgba(198,161,91,.8);}
+
+/* ---- The foot ------------------------------------------------------
+   Light-by-default, like the head; the original espresso plate moves to
+   the dark/royal block below, unchanged. */
 .pch-foot{
   position:relative;isolation:isolate;margin-top:auto;
   padding:34px 28px 26px;
-  background:linear-gradient(168deg,#241708 0%,#170E04 100%);
-  border-top:1px solid rgba(233,206,138,.4);
-  box-shadow:inset 0 1px 0 rgba(233,206,138,.16);}
-/* The crest, watermarked. At 150% of the foot's height and five per cent it
-   was a watermark on a footer 180px tall and a mural on the one that stands
-   here now: the arms filled the whole plate, the statement and the live panel
-   read through a shield, and the espresso ground looked mid-brown because a
-   pale ornament was lying across all of it. A watermark is the thing you
-   notice second. */
+  background:linear-gradient(168deg,var(--ivory-bg) 0%,var(--portal-card) 100%);
+  border-top:1px solid var(--line);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6);}
 .pch-foot::before{
-  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.02;
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.03;
   background-image:url("/assets/images/crest-watermark.png");
   background-size:auto 64%;background-repeat:no-repeat;background-position:center 30%;}
 /* ---- The arrival ----------------------------------------------------
    The school's own footer does not begin with columns; it begins with a
    ruled plate carrying four corner marks, the statement, and a lozenge.
-   That plate is why the public footer closes a document and the
-   portal's merely ended a screen. The portal has it now, at the weight
-   a working page can carry: one plate, not the marketing footer's full
-   arrival sequence.
    ------------------------------------------------------------------- */
 .pch-arrival{
   position:relative;max-width:1180px;margin:0 auto 30px;
   padding:34px 44px 30px;text-align:center;
-  border:1px solid rgba(233,206,138,.2);border-radius:3px;
+  border:1px solid var(--line);border-radius:3px;
   background:
-    radial-gradient(560px 180px at 50% 0%,rgba(233,206,138,.08),transparent 72%),
-    linear-gradient(168deg,rgba(233,206,138,.045),rgba(0,0,0,.14));
-  box-shadow:inset 0 1px 0 rgba(255,246,223,.08);}
-.pch-corner{position:absolute;width:26px;height:26px;color:rgba(233,206,138,.55);}
+    radial-gradient(560px 180px at 50% 0%,rgba(var(--lv-gs,198,161,91),.14),transparent 72%),
+    linear-gradient(168deg,rgba(255,255,255,.68),rgba(var(--lv-gs,198,161,91),.12));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8);}
+.pch-corner{position:absolute;width:26px;height:26px;color:rgba(var(--lv-gs,198,161,91),.7);}
 .pch-corner svg{width:100%;height:100%;display:block;}
 .pch-corner.tl{top:9px;inset-inline-start:9px;}
 .pch-corner.tr{top:9px;inset-inline-end:9px;transform:scaleX(-1);}
@@ -305,14 +419,36 @@
 .pch-statement{
   margin:0;font-family:var(--font-display,'Cormorant Garamond',Georgia,serif);
   font-size:clamp(1.05rem,2.2vw,1.42rem);font-style:italic;line-height:1.5;
-  color:rgb(255,246,223);text-wrap:balance;}
+  color:var(--ink);text-wrap:balance;}
 .pch-mark{
-  margin:16px auto 0;width:20px;height:20px;color:rgba(233,206,138,.75);}
+  margin:16px auto 0;width:20px;height:20px;color:rgb(var(--lv-gt2,138,106,47));}
 .pch-mark svg{width:100%;height:100%;display:block;}
 @media (max-width:620px){
   .pch-arrival{padding:26px 20px 22px;margin-bottom:22px;}
   .pch-corner{width:18px;height:18px;}
 }
+
+/* ---- Dark/Royal theme: the original espresso foot, unchanged ------- */
+html[data-pc-theme="dark"] .pch-foot,
+html[data-pc-theme="royal"] .pch-foot{
+  background:linear-gradient(168deg,#241708 0%,#170E04 100%);
+  border-top:1px solid rgba(233,206,138,.4);
+  box-shadow:inset 0 1px 0 rgba(233,206,138,.16);}
+html[data-pc-theme="dark"] .pch-foot::before,
+html[data-pc-theme="royal"] .pch-foot::before{opacity:.02;}
+html[data-pc-theme="dark"] .pch-arrival,
+html[data-pc-theme="royal"] .pch-arrival{
+  border:1px solid rgba(233,206,138,.2);
+  background:
+    radial-gradient(560px 180px at 50% 0%,rgba(233,206,138,.08),transparent 72%),
+    linear-gradient(168deg,rgba(233,206,138,.045),rgba(0,0,0,.14));
+  box-shadow:inset 0 1px 0 rgba(255,246,223,.08);}
+html[data-pc-theme="dark"] .pch-corner,
+html[data-pc-theme="royal"] .pch-corner{color:rgba(233,206,138,.55);}
+html[data-pc-theme="dark"] .pch-statement,
+html[data-pc-theme="royal"] .pch-statement{color:rgb(255,246,223);}
+html[data-pc-theme="dark"] .pch-mark,
+html[data-pc-theme="royal"] .pch-mark{color:rgba(233,206,138,.75);}
 
 /* ---- The school, right now ------------------------------------------
    The same live panel the public footer carries, on the same
@@ -327,38 +463,38 @@
 .pch-now{
   position:relative;max-width:1180px;margin:0 auto 30px;
   padding:24px 30px;border-radius:3px;
-  border:1px solid rgba(233,206,138,.18);
-  background:linear-gradient(168deg,rgba(233,206,138,.05),rgba(0,0,0,.2));}
+  border:1px solid var(--line);
+  background:linear-gradient(168deg,rgba(255,255,255,.7),rgba(var(--lv-gs,198,161,91),.08));}
 .pch-now-head{
   display:flex;align-items:baseline;justify-content:space-between;
   flex-wrap:wrap;gap:4px 20px;margin-bottom:18px;
-  padding-bottom:12px;border-bottom:1px solid rgba(233,206,138,.16);}
+  padding-bottom:12px;border-bottom:1px solid var(--line);}
 .pch-now-eyebrow{
   margin:0;font-family:var(--font-label,'Cinzel',serif);font-size:.68rem;
-  letter-spacing:.19em;text-transform:uppercase;color:#E4C87F;}
-.pch-now-place{margin:0;font-size:.71rem;color:rgba(var(--lv-p3,247,238,223),.56);}
+  letter-spacing:.19em;text-transform:uppercase;color:var(--portal-heading);}
+.pch-now-place{margin:0;font-size:.71rem;color:var(--ink-soft);}
 .pch-now-grid{
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 34px;}
 .pch-now-cell{display:flex;flex-direction:column;gap:5px;min-width:0;}
 .pch-now-k{
   font-family:var(--font-label,'Cinzel',serif);font-size:.58rem;letter-spacing:.16em;
-  text-transform:uppercase;color:rgba(233,206,138,.72);}
+  text-transform:uppercase;color:var(--ink-soft);}
 .pch-now-clock,.pch-now-hours{
-  font-size:1.14rem;color:#FFF6DF;letter-spacing:.02em;
+  font-size:1.14rem;color:var(--ink);letter-spacing:.02em;
   font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;}
-.pch-now-state{display:inline-flex;align-items:center;gap:9px;font-size:1.14rem;color:#FFF6DF;}
+.pch-now-state{display:inline-flex;align-items:center;gap:9px;font-size:1.14rem;color:var(--ink);}
 .pch-now-dot{
   width:9px;height:9px;border-radius:50%;flex:0 0 auto;
-  background:rgba(var(--lv-p3,247,238,223),.45);box-shadow:0 0 0 0 rgba(var(--lv-p3,247,238,223),0);}
+  background:rgba(var(--lv-gs,198,161,91),.4);box-shadow:0 0 0 0 rgba(0,0,0,0);}
 [data-now-state="open"] .pch-now-dot{
-  background:#7FCB8E;box-shadow:0 0 10px 1px rgba(127,203,142,.55);}
+  background:#3E9B5C;box-shadow:0 0 10px 1px rgba(62,155,92,.4);}
 [data-now-state="closed"] .pch-now-dot{
-  background:#D08C6A;box-shadow:0 0 10px 1px rgba(208,140,106,.4);}
-.pch-now-sub{font-size:.73rem;color:rgba(var(--lv-p3,247,238,223),.58);}
-.pch-now-link{color:rgba(233,206,138,.86);text-decoration:none;
-  border-bottom:1px solid rgba(233,206,138,.3);padding-bottom:1px;
+  background:#B4623A;box-shadow:0 0 10px 1px rgba(180,98,58,.35);}
+.pch-now-sub{font-size:.73rem;color:var(--ink-soft);}
+.pch-now-link{color:var(--portal-heading);text-decoration:none;
+  border-bottom:1px solid var(--line);padding-bottom:1px;
   transition:color .3s ease,border-color .3s ease;}
-.pch-now-link:hover,.pch-now-link:focus-visible{color:#FFF6DF;border-color:#E9CE8A;}
+.pch-now-link:hover,.pch-now-link:focus-visible{color:var(--ink);border-color:var(--gold);}
 @media (max-width:820px){
   .pch-now-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
 }
@@ -366,6 +502,43 @@
   .pch-now{padding:20px 18px;}
   .pch-now-grid{grid-template-columns:minmax(0,1fr);}
 }
+
+/* ---- Dark/Royal theme: the original espresso "right now" panel ----- */
+html[data-pc-theme="dark"] .pch-now,
+html[data-pc-theme="royal"] .pch-now{
+  border:1px solid rgba(233,206,138,.18);
+  background:linear-gradient(168deg,rgba(233,206,138,.05),rgba(0,0,0,.2));}
+html[data-pc-theme="dark"] .pch-now-head,
+html[data-pc-theme="royal"] .pch-now-head{border-bottom:1px solid rgba(233,206,138,.16);}
+html[data-pc-theme="dark"] .pch-now-eyebrow,
+html[data-pc-theme="royal"] .pch-now-eyebrow{color:#E4C87F;}
+html[data-pc-theme="dark"] .pch-now-place,
+html[data-pc-theme="royal"] .pch-now-place{color:rgba(var(--lv-p3,247,238,223),.56);}
+html[data-pc-theme="dark"] .pch-now-k,
+html[data-pc-theme="royal"] .pch-now-k{color:rgba(233,206,138,.72);}
+html[data-pc-theme="dark"] .pch-now-clock,
+html[data-pc-theme="dark"] .pch-now-hours,
+html[data-pc-theme="dark"] .pch-now-state,
+html[data-pc-theme="royal"] .pch-now-clock,
+html[data-pc-theme="royal"] .pch-now-hours,
+html[data-pc-theme="royal"] .pch-now-state{color:#FFF6DF;}
+html[data-pc-theme="dark"] .pch-now-dot,
+html[data-pc-theme="royal"] .pch-now-dot{
+  background:rgba(var(--lv-p3,247,238,223),.45);box-shadow:0 0 0 0 rgba(var(--lv-p3,247,238,223),0);}
+html[data-pc-theme="dark"] [data-now-state="open"] .pch-now-dot,
+html[data-pc-theme="royal"] [data-now-state="open"] .pch-now-dot{
+  background:#7FCB8E;box-shadow:0 0 10px 1px rgba(127,203,142,.55);}
+html[data-pc-theme="dark"] [data-now-state="closed"] .pch-now-dot,
+html[data-pc-theme="royal"] [data-now-state="closed"] .pch-now-dot{
+  background:#D08C6A;box-shadow:0 0 10px 1px rgba(208,140,106,.4);}
+html[data-pc-theme="dark"] .pch-now-sub,
+html[data-pc-theme="royal"] .pch-now-sub{color:rgba(var(--lv-p3,247,238,223),.58);}
+html[data-pc-theme="dark"] .pch-now-link,
+html[data-pc-theme="royal"] .pch-now-link{color:rgba(233,206,138,.86);border-bottom:1px solid rgba(233,206,138,.3);}
+html[data-pc-theme="dark"] .pch-now-link:hover,
+html[data-pc-theme="dark"] .pch-now-link:focus-visible,
+html[data-pc-theme="royal"] .pch-now-link:hover,
+html[data-pc-theme="royal"] .pch-now-link:focus-visible{color:#FFF6DF;border-color:#E9CE8A;}
 
 /* ---- The colophon, in columns ---------------------------------------
    This was a row of bare underlined links, a right-orphaned meta line, four
@@ -384,21 +557,21 @@
   filter:drop-shadow(0 0 12px rgba(233,206,138,.35));}
 .pch-foot-name{
   align-self:end;font-family:var(--font-label,'Cinzel',serif);font-size:.92rem;
-  letter-spacing:.05em;color:#FFF6DF;}
-.pch-foot-sig{align-self:start;font-size:.72rem;color:rgba(var(--lv-p3,247,238,223),.62);}
+  letter-spacing:.05em;color:var(--ink);}
+.pch-foot-sig{align-self:start;font-size:.72rem;color:var(--ink-soft);}
 .pch-col-brand .pch-note{grid-column:1 / -1;margin:14px 0 0;}
 
 /* The heading treatment the site footer uses: small Cinzel gold, over a rule
    that runs the width of the column. */
 .pch-h{
   font-family:var(--font-label,'Cinzel',serif);font-size:.66rem;font-weight:600;
-  letter-spacing:.17em;text-transform:uppercase;color:#E4C87F;
+  letter-spacing:.17em;text-transform:uppercase;color:var(--portal-heading);
   margin:0 0 12px;padding-bottom:9px;position:relative;overflow:hidden;}
 .pch-h::after{
   content:"";position:absolute;inset-inline:0;bottom:0;height:1px;
-  background:linear-gradient(90deg,rgba(233,206,138,.62),rgba(233,206,138,.06));}
+  background:linear-gradient(90deg,var(--gold),rgba(var(--lv-gs,198,161,91),.15));}
 [dir="rtl"] .pch-h::after{
-  background:linear-gradient(270deg,rgba(233,206,138,.62),rgba(233,206,138,.06));}
+  background:linear-gradient(270deg,var(--gold),rgba(var(--lv-gs,198,161,91),.15));}
 /* One restrained travelling glint on the rule beneath each footer heading —
    the same technique (and the same restraint) the public footer's own
    .foot-grid h2::after already uses: a short brighter segment sliding along
@@ -406,7 +579,7 @@
    reproduce the crest foil-sweep's "lit box" problem above. */
 .pch-h::before{
   content:"";position:absolute;inset-block-end:0;inset-inline-start:0;
-  width:34px;height:1px;background:rgba(255,246,223,.85);
+  width:34px;height:1px;background:var(--gold-bright);
   animation:pch-h-travel 6s ease-in-out infinite;}
 [dir="rtl"] .pch-h::before{animation-name:pch-h-travel-rtl;}
 @keyframes pch-h-travel{0%,100%{transform:translateX(0);opacity:.5;}50%{transform:translateX(28px);opacity:1;}}
@@ -419,38 +592,72 @@
    navigation does. */
 .pch-link{
   position:relative;width:fit-content;font-size:.8rem;text-decoration:none;
-  color:rgba(var(--lv-p3,247,238,223),.82);padding-bottom:2px;
+  color:var(--ink-soft);padding-bottom:2px;
   transition:color .3s ease,transform .3s ease;}
 .pch-link::after{
   content:"";position:absolute;inset-inline-start:0;bottom:0;height:1px;width:100%;
-  background:var(--gold-bright,#E9CE8A);transform:scaleX(0);transform-origin:inline-start;
+  background:var(--gold-bright,var(--gold));transform:scaleX(0);transform-origin:inline-start;
   transition:transform .38s cubic-bezier(.16,.8,.24,1);}
-.pch-link:hover,.pch-link:focus-visible{color:#FFF6DF;}
+.pch-link:hover,.pch-link:focus-visible{color:var(--portal-heading);}
 .pch-link:hover::after,.pch-link:focus-visible::after{transform:scaleX(1);}
 
 .pch-rule{
   max-width:1180px;margin:26px auto 0;height:1px;
-  background:linear-gradient(90deg,transparent,
-    rgba(198,161,91,.45) 20%,rgba(233,206,138,.7) 50%,
-    rgba(198,161,91,.45) 80%,transparent);}
+  background:linear-gradient(90deg,transparent,var(--gold) 20%,var(--gold-bright) 50%,var(--gold) 80%,transparent);}
 
 .pch-colophon{
   max-width:1180px;margin:16px auto 0;display:flex;align-items:center;
   justify-content:space-between;gap:14px 26px;flex-wrap:wrap;}
 .pch-meta{
   display:flex;flex-wrap:wrap;gap:4px 20px;
-  font-size:.71rem;color:rgba(var(--lv-p3,247,238,223),.56);}
+  font-size:.71rem;color:var(--ink-soft);}
 .pch-meta a{color:inherit;}
 /* A seal, not a dashed placeholder box. */
 .pch-badge{
   font-family:var(--font-label,'Cinzel',serif);font-size:.58rem;letter-spacing:.16em;
-  text-transform:uppercase;color:#E4C87F;white-space:nowrap;
+  text-transform:uppercase;color:var(--portal-heading);white-space:nowrap;
   padding:8px 16px;border-radius:99px;
-  border:1px solid rgba(233,206,138,.34);
+  border:1px solid var(--line);
+  background:linear-gradient(168deg,rgba(var(--lv-gs,198,161,91),.10),rgba(var(--lv-gs,198,161,91),.02));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5);}
+.pch-note{
+  margin:0;font-size:.71rem;line-height:1.62;color:var(--ink-soft);}
+
+/* ---- Dark/Royal theme: the original espresso colophon, unchanged --- */
+html[data-pc-theme="dark"] .pch-foot-name,
+html[data-pc-theme="royal"] .pch-foot-name{color:#FFF6DF;}
+html[data-pc-theme="dark"] .pch-foot-sig,
+html[data-pc-theme="royal"] .pch-foot-sig{color:rgba(var(--lv-p3,247,238,223),.62);}
+html[data-pc-theme="dark"] .pch-h,
+html[data-pc-theme="royal"] .pch-h{color:#E4C87F;}
+html[data-pc-theme="dark"] .pch-h::after,
+html[data-pc-theme="royal"] .pch-h::after{
+  background:linear-gradient(90deg,rgba(233,206,138,.62),rgba(233,206,138,.06));}
+[dir="rtl"] html[data-pc-theme="dark"] .pch-h::after,
+[dir="rtl"] html[data-pc-theme="royal"] .pch-h::after{
+  background:linear-gradient(270deg,rgba(233,206,138,.62),rgba(233,206,138,.06));}
+html[data-pc-theme="dark"] .pch-h::before,
+html[data-pc-theme="royal"] .pch-h::before{background:rgba(255,246,223,.85);}
+html[data-pc-theme="dark"] .pch-link,
+html[data-pc-theme="royal"] .pch-link{color:rgba(var(--lv-p3,247,238,223),.82);}
+html[data-pc-theme="dark"] .pch-link:hover,
+html[data-pc-theme="dark"] .pch-link:focus-visible,
+html[data-pc-theme="royal"] .pch-link:hover,
+html[data-pc-theme="royal"] .pch-link:focus-visible{color:#FFF6DF;}
+html[data-pc-theme="dark"] .pch-rule,
+html[data-pc-theme="royal"] .pch-rule{
+  background:linear-gradient(90deg,transparent,
+    rgba(198,161,91,.45) 20%,rgba(233,206,138,.7) 50%,
+    rgba(198,161,91,.45) 80%,transparent);}
+html[data-pc-theme="dark"] .pch-meta,
+html[data-pc-theme="royal"] .pch-meta{color:rgba(var(--lv-p3,247,238,223),.56);}
+html[data-pc-theme="dark"] .pch-badge,
+html[data-pc-theme="royal"] .pch-badge{
+  color:#E4C87F;border:1px solid rgba(233,206,138,.34);
   background:linear-gradient(168deg,rgba(233,206,138,.10),rgba(233,206,138,.02));
   box-shadow:inset 0 1px 0 rgba(255,246,223,.12);}
-.pch-note{
-  margin:0;font-size:.71rem;line-height:1.62;color:rgba(var(--lv-p3,247,238,223),.56);}
+html[data-pc-theme="dark"] .pch-note,
+html[data-pc-theme="royal"] .pch-note{color:rgba(var(--lv-p3,247,238,223),.56);}
 
 @media (max-width:900px){
   .pch-foot-inner{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}
@@ -502,30 +709,65 @@ html[data-pc-motion="reduced"] .portal-topbar::after{animation:none;transform:sc
    one line of CSS pointing at the wrong ground. */
 .portal-topbar .portal-theme-toggle{
   width:34px;height:34px;
+  background:linear-gradient(168deg,rgba(var(--lv-gs,198,161,91),.11),rgba(var(--lv-gs,198,161,91),.02))!important;
+  border:1px solid var(--line)!important;
+  color:rgb(var(--lv-gt2,138,106,47))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5);}
+.portal-topbar .portal-theme-toggle:hover,
+.portal-topbar .portal-theme-toggle:focus-visible{
+  background:rgba(var(--lv-gs,198,161,91),.18)!important;
+  border-color:var(--gold)!important;color:var(--portal-heading)!important;}
+
+.portal-topbar-calendar{
+  color:rgb(var(--lv-gt2,138,106,47))!important;border-color:var(--line)!important;
+  border-radius:99px;}
+.portal-topbar-calendar:hover{
+  color:var(--portal-heading)!important;border-color:var(--gold)!important;
+  background:rgba(var(--lv-gs,198,161,91),.12);}
+.portal-topbar .lang-switch > summary{
+  color:rgb(var(--lv-gt2,138,106,47))!important;border-color:var(--line)!important;}
+.portal-topbar .lang-switch > summary:hover{
+  color:var(--portal-heading)!important;border-color:var(--gold)!important;
+  background:rgba(var(--lv-gs,198,161,91),.12);}
+
+/* The chronometer takes a light-dial face by default, matching the bar;
+   the dark dial (original) is restated for dark/royal below. */
+.portal-topbar{
+  --rlx-face-1:#FBF6EA; --rlx-face-2:#F1E5C8; --rlx-face-3:#E9D9B0;
+  --rlx-track:rgba(140,104,52,.5); --rlx-idx:rgb(var(--lv-gt2,138,106,47));
+  --rlx-sig:rgba(140,104,52,.75);
+  --rlx-hand-1:#2A1C10; --rlx-hand-2:rgb(var(--lv-gt2,138,106,47));
+  --rlx-hand-edge:rgba(42,28,16,.5);
+  --rlx-sec:rgb(var(--lv-gt2,138,106,47)); --rlx-glass:rgba(255,255,255,.3);}
+
+html[data-pc-theme="dark"] .portal-topbar .portal-theme-toggle,
+html[data-pc-theme="royal"] .portal-topbar .portal-theme-toggle{
   background:linear-gradient(168deg,rgba(233,206,138,.11),rgba(233,206,138,.02))!important;
   border:1px solid rgba(233,206,138,.34)!important;
   color:#EBD3A0!important;
   box-shadow:inset 0 1px 0 rgba(255,246,223,.12);}
-.portal-topbar .portal-theme-toggle:hover,
-.portal-topbar .portal-theme-toggle:focus-visible{
+html[data-pc-theme="dark"] .portal-topbar .portal-theme-toggle:hover,
+html[data-pc-theme="dark"] .portal-topbar .portal-theme-toggle:focus-visible,
+html[data-pc-theme="royal"] .portal-topbar .portal-theme-toggle:hover,
+html[data-pc-theme="royal"] .portal-topbar .portal-theme-toggle:focus-visible{
   background:rgba(233,206,138,.18)!important;
   border-color:rgba(233,206,138,.75)!important;color:#FFF6DF!important;}
-
-.portal-topbar-calendar{
-  color:#EBD3A0!important;border-color:rgba(233,206,138,.4)!important;
-  border-radius:99px;}
-.portal-topbar-calendar:hover{
+html[data-pc-theme="dark"] .portal-topbar-calendar,
+html[data-pc-theme="royal"] .portal-topbar-calendar{
+  color:#EBD3A0!important;border-color:rgba(233,206,138,.4)!important;}
+html[data-pc-theme="dark"] .portal-topbar-calendar:hover,
+html[data-pc-theme="royal"] .portal-topbar-calendar:hover{
   color:#FFF6DF!important;border-color:rgba(233,206,138,.85)!important;
   background:rgba(233,206,138,.12);}
-.portal-topbar .lang-switch > summary{
+html[data-pc-theme="dark"] .portal-topbar .lang-switch > summary,
+html[data-pc-theme="royal"] .portal-topbar .lang-switch > summary{
   color:#EBD3A0!important;border-color:rgba(233,206,138,.4)!important;}
-.portal-topbar .lang-switch > summary:hover{
+html[data-pc-theme="dark"] .portal-topbar .lang-switch > summary:hover,
+html[data-pc-theme="royal"] .portal-topbar .lang-switch > summary:hover{
   color:#FFF6DF!important;border-color:rgba(233,206,138,.8)!important;
   background:rgba(233,206,138,.12);}
-
-/* The chronometer sits on espresso here whatever edition the visitor
-   has chosen for the marketing site, so it takes the dark dial. */
-.portal-topbar{
+html[data-pc-theme="dark"] .portal-topbar,
+html[data-pc-theme="royal"] .portal-topbar{
   --rlx-face-1:#3A2A18; --rlx-face-2:#241708; --rlx-face-3:#170E04;
   --rlx-track:rgba(233,206,138,.5); --rlx-idx:#E9CE8A;
   --rlx-sig:rgba(233,206,138,.75);

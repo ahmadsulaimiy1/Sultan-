@@ -35,8 +35,15 @@
     try{ document.dispatchEvent(new CustomEvent('sultan:personalisation-changed', { detail: prefs })); }catch(err){}
   }
 
+  // Founder redesign directive (Phase 5): every dashboard page defaulted
+  // to 'royal' (a dark, espresso theme) with no stored preference, which
+  // is why the portal read as permanently dark/brown regardless of the
+  // "polished white, gold" look the rest of the site (and this same
+  // mechanism, via js/personalisation.js) already defaults to elsewhere.
+  // Matches the public site's own default now, rather than a second,
+  // portal-only default that happened to point the other way.
   var prefs = loadPrefs();
-  var theme = ORDER.indexOf(prefs.theme) > -1 ? prefs.theme : 'royal';
+  var theme = ORDER.indexOf(prefs.theme) > -1 ? prefs.theme : 'light';
   document.documentElement.setAttribute('data-pc-theme', theme);
 
   /* Synchronous locale bootstrap. js/i18n.js is deferred (it fetches a
