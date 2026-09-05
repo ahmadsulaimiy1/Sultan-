@@ -87,6 +87,19 @@
     var hasExe = (data.roles || []).some(function (r) { return r.roleCode === 'EXE'; });
     if (hasExe) add('Founder Dashboard', 'Institution-wide analytics', '/portal/founder/');
 
+    // Registrar Operations was only ever added via DEEP_LINKS_BY_SLUG
+    // above, which requires an office_appointments seat with slug
+    // 'registrar' — real for the named Registrar, but a REG role grant
+    // (staff_roles) is what the Permission Matrix actually checks when
+    // the page itself loads, and a holder can have one without the
+    // other (e.g. a role granted directly, with no appointment record
+    // yet). Same reasoning and same fix as the DSL/VP/PRIN checks above:
+    // role-code check, so the link renders whenever the Matrix would
+    // actually let this account use the page, not only when an
+    // appointment row happens to exist too.
+    var hasRegRole = (data.roles || []).some(function (r) { return r.roleCode === 'REG' || r.roleCode === 'AREG'; });
+    if (hasRegRole) add('Registrar Operations', 'Academic records, enrolment, certification', '/portal/staff/registrar/');
+
     // The Admin Centre needs Manage Users (permission-matrix.js §staff_records),
     // which only SYSADMIN and EXE hold — but this switcher works from role
     // codes already in hand rather than an extra permission call, so it
