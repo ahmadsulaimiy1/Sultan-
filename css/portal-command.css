@@ -778,78 +778,64 @@ body.portal-body .portal-child-card a:hover { color: var(--cmd-espresso); }
    12. THE WELCOME — a photograph, and a line that types itself
    =========================================================================== */
 
+/* Founder correction — this hero used to stay dark espresso in every
+   theme, including the site's own light/pearl default, which is the
+   exact "still building on colour brown... the overall background
+   should be pure, elegant, and premium white" inconsistency flagged
+   directly. Pearl-white-with-gold is now the default; the dark/royal
+   -scoped block further down keeps the original espresso plate for an
+   explicit dark-theme choice only. */
 body.portal-body .exec-welcome {
   position: relative; isolation: isolate; overflow: hidden;
   border-radius: 20px;
   padding: clamp(22px, 3.4vw, 40px) clamp(20px, 3vw, 40px);
-  border: 1px solid rgba(198,161,91,.42);
-  /* THE SHRS LATTICE (Phase 7) — the same crossing-hairline-diagonal +
-     travelling-spotlight signature as css/portal.css's own .exec-welcome
-     (see the long comment there for why this is stated twice: this
-     rule, not that one, wins on the 72 pages that load this file, and
-     ::before/::after here are already the corner-frame decoration
-     below, so the lattice has to live on the element's own background
-     rather than fight over a pseudo-element). --lattice-x and the
-     shrs-lattice-glow keyframes are declared once, in portal.css, and
-     used here since both files load together on every page that needs
-     this.
-
-     Layer order: the opaque base gradient must be LAST — CSS paints the
-     first-listed background-image layer on top, so an earlier pass that
-     put the opaque layer first silently hid the spotlight/diagonals
-     entirely underneath it (confirmed by sampling raw pixel values off
-     a screenshot: zero variance until the base moved to the end).
-     Diagonal opacity is .32, not a fainter value — under ~.20 alpha a
-     1px hard-stop repeating line measures only a couple of RGB units of
-     contrast against this ground: real in the pixels, invisible in
-     practice. --lattice-glow/--lattice-line default to gold; the
-     Atmosphere System (css/portal.css) overrides them per office. */
+  border: 1px solid rgba(198,161,91,.4);
+  /* THE SHRS LATTICE (Phase 7) — see css/portal.css's own .exec-welcome
+     for the full account of the two bugs this exact recipe already hit
+     (layer order, and an undeclared background-size/position property
+     silently inherited from an unrelated rule) — both already fixed
+     here. Muted --lv-gs gold, not --lv-gbs: bright gold is close enough
+     to this pearl ground to disappear. */
   background-image:
-    radial-gradient(420px 280px at var(--lattice-x,-10%) 45%, var(--lattice-glow, rgba(233,206,138,.22)), transparent 68%),
-    repeating-linear-gradient(45deg, var(--lattice-line, rgba(233,206,138,.32)) 0 1.5px, transparent 1.5px 72px),
-    repeating-linear-gradient(-45deg, var(--lattice-line, rgba(233,206,138,.32)) 0 1.5px, transparent 1.5px 72px),
-    linear-gradient(168deg, #221709 0%, #1A1206 46%, #140D04 100%);
-  /* Explicit size/position/repeat so this rule owns all of its own
-     background sub-properties — otherwise, since css/portal.css's own
-     .exec-welcome rule DOES declare background-size/background-position
-     (for its own, differently-counted layer stack), an unrelated cascade
-     rule with no competing declaration silently wins those properties
-     here too, stretching/mispositioning this layer stack (found via
-     screenshot: the hero rendered with its right half transparent). */
+    radial-gradient(420px 280px at var(--lattice-x,-10%) 45%, var(--lattice-glow, rgba(var(--lv-gs,198,161,91),.20)), transparent 68%),
+    repeating-linear-gradient(45deg, var(--lattice-line, rgba(var(--lv-gs,198,161,91),.16)) 0 1.5px, transparent 1.5px 72px),
+    repeating-linear-gradient(-45deg, var(--lattice-line, rgba(var(--lv-gs,198,161,91),.16)) 0 1.5px, transparent 1.5px 72px),
+    linear-gradient(168deg, var(--pearl,rgb(251,247,239)) 0%, var(--pearl-2,rgb(244,237,224)) 60%, var(--pearl-3,rgb(237,227,210)) 100%);
   background-size: auto;
   background-position: 0 0;
   background-repeat: no-repeat, repeat, repeat, no-repeat;
   animation: shrs-lattice-glow 14s ease-in-out infinite;
-  box-shadow: 0 30px 66px -28px rgba(40,26,8,.55);
+  box-shadow: 0 32px 64px -30px rgba(20,13,4,0.2),0 10px 22px -12px rgba(20,13,4,0.12),inset 0 1px 0 rgba(255,255,255,0.7);
 }
 @media (prefers-reduced-motion: reduce){ body.portal-body .exec-welcome{ animation: none; } }
 body.portal-body .exec-welcome::before,
 body.portal-body .exec-welcome::after {
   content: ''; position: absolute; width: 52px; height: 52px; pointer-events: none;
-  border: 1px solid rgba(233,206,138,.70);
+  border: 1px solid rgba(var(--lv-gs,198,161,91),.55);
 }
 body.portal-body .exec-welcome::before { top: 16px; left: 16px; border-right: 0; border-bottom: 0; }
 body.portal-body .exec-welcome::after  { bottom: 16px; right: 16px; border-left: 0; border-top: 0; }
 
 body.portal-body .exec-welcome h1 {
   font-family: 'Cinzel', 'EB Garamond', Garamond, serif;
-  color: #FFFDF7; font-size: clamp(25px, 3.5vw, 46px); line-height: 1.14;
-  text-shadow: 0 2px 20px rgba(0,0,0,.55); min-height: 1.2em;
+  color: var(--cmd-ink,#2A2016); font-size: clamp(25px, 3.5vw, 46px); line-height: 1.14;
+  text-shadow: none; min-height: 1.2em;
 }
 /* the caret that follows the typing */
 body.portal-body .exec-welcome h1 .cmd-caret {
   display: inline-block; width: 2px; height: .92em; margin-left: 3px;
-  background: var(--cmd-champagne); vertical-align: -.09em;
+  background: var(--cmd-gold,#C6A15B); vertical-align: -.09em;
   animation: cmd-blink 1.05s steps(1) infinite;
 }
 @keyframes cmd-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
 body.portal-body .exec-welcome h1 .cmd-caret[data-done] { animation: none; opacity: 0; }
 
 body.portal-body .exec-welcome-eyebrow,
-body.portal-body .exec-welcome-role { color: var(--cmd-champagne) !important; }
+body.portal-body .exec-welcome-role { color: rgb(var(--lv-gt2,138,106,47)) !important; }
+body.portal-body .exec-welcome-role { color: var(--cmd-ink,#2A2016) !important; opacity: .82; }
 body.portal-body .exec-welcome-motto {
   font-family: 'EB Garamond', Garamond, serif; font-style: italic;
-  color: rgba(251,243,223,.90) !important; font-size: clamp(14px, 1.5vw, 19px);
+  color: rgb(var(--lv-gt2,138,106,47)) !important; font-size: clamp(14px, 1.5vw, 19px);
 }
 body.portal-body .exec-welcome-stats {
   margin-top: 26px; padding-top: 22px; position: relative;
@@ -859,12 +845,43 @@ body.portal-body .exec-welcome-stats::before {
   background: var(--cmd-foil-soft); opacity: .85;
 }
 body.portal-body .exec-welcome-stat .value {
-  font-family: 'Cinzel', 'EB Garamond', serif; color: var(--cmd-champagne) !important;
+  font-family: 'Cinzel', 'EB Garamond', serif; color: rgb(var(--lv-gt2,138,106,47)) !important;
   font-variant-numeric: tabular-nums;
 }
 body.portal-body .exec-welcome-stat .label {
-  color: rgba(233,206,138,.80) !important; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--cmd-ink,#2A2016) !important; opacity: .78; letter-spacing: .16em; text-transform: uppercase;
 }
+
+/* Dark/royal theme: the original espresso plate, unchanged. */
+html[data-pc-theme="dark"] body.portal-body .exec-welcome,
+html[data-pc-theme="royal"] body.portal-body .exec-welcome {
+  background-image:
+    radial-gradient(420px 280px at var(--lattice-x,-10%) 45%, var(--lattice-glow, rgba(233,206,138,.22)), transparent 68%),
+    repeating-linear-gradient(45deg, var(--lattice-line, rgba(233,206,138,.32)) 0 1.5px, transparent 1.5px 72px),
+    repeating-linear-gradient(-45deg, var(--lattice-line, rgba(233,206,138,.32)) 0 1.5px, transparent 1.5px 72px),
+    linear-gradient(168deg, #221709 0%, #1A1206 46%, #140D04 100%);
+  box-shadow: 0 30px 66px -28px rgba(40,26,8,.55);
+}
+html[data-pc-theme="dark"] body.portal-body .exec-welcome::before,
+html[data-pc-theme="dark"] body.portal-body .exec-welcome::after,
+html[data-pc-theme="royal"] body.portal-body .exec-welcome::before,
+html[data-pc-theme="royal"] body.portal-body .exec-welcome::after{border-color: rgba(233,206,138,.70);}
+html[data-pc-theme="dark"] body.portal-body .exec-welcome h1,
+html[data-pc-theme="royal"] body.portal-body .exec-welcome h1{
+  color: #FFFDF7; text-shadow: 0 2px 20px rgba(0,0,0,.55);
+}
+html[data-pc-theme="dark"] body.portal-body .exec-welcome h1 .cmd-caret,
+html[data-pc-theme="royal"] body.portal-body .exec-welcome h1 .cmd-caret{background: var(--cmd-champagne);}
+html[data-pc-theme="dark"] body.portal-body .exec-welcome-eyebrow,
+html[data-pc-theme="dark"] body.portal-body .exec-welcome-role,
+html[data-pc-theme="royal"] body.portal-body .exec-welcome-eyebrow,
+html[data-pc-theme="royal"] body.portal-body .exec-welcome-role{ color: var(--cmd-champagne) !important; opacity:1; }
+html[data-pc-theme="dark"] body.portal-body .exec-welcome-motto,
+html[data-pc-theme="royal"] body.portal-body .exec-welcome-motto{ color: rgba(251,243,223,.90) !important; }
+html[data-pc-theme="dark"] body.portal-body .exec-welcome-stat .value,
+html[data-pc-theme="royal"] body.portal-body .exec-welcome-stat .value{ color: var(--cmd-champagne) !important; }
+html[data-pc-theme="dark"] body.portal-body .exec-welcome-stat .label,
+html[data-pc-theme="royal"] body.portal-body .exec-welcome-stat .label{ color: rgba(233,206,138,.80) !important; opacity:1; }
 
 /* A card's icon: a gold medallion, as on the public site's nav cards. */
 .cmd-ico {

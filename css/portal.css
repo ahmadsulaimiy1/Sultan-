@@ -1379,12 +1379,27 @@ select.registrar-search-row-select{
 .exec-stat-label{font-size:0.74rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);}
 .exec-stat-value{font-family:'Cinzel','Amiri',serif;font-size:1.5rem;color:var(--portal-heading);margin-top:4px;}
 
+/* Founder correction (this replaces an earlier "Executive Command
+   Centre" identity that stayed dark navy/espresso in every theme,
+   including the site's own light/pearl default — the exact brown
+   inconsistency flagged directly: "still building on colour brown...
+   the overall background should be pure, elegant, and premium white").
+   Pearl-white-with-gold is now the default for every theme except an
+   explicit dark/royal choice, matching the rest of the site rather
+   than carrying its own permanent dark identity. */
 .exec-welcome{
   position:relative;overflow:hidden;isolation:isolate;
+  background:radial-gradient(650px 260px at 88% -20%, rgba(var(--lv-gs,198,161,91),0.12), transparent 65%),
+    linear-gradient(168deg, var(--pearl,rgb(251,247,239)) 0%, var(--pearl-2,rgb(244,237,224)) 60%, var(--pearl-3,rgb(237,227,210)) 100%);
+  color:var(--pearl-ink,#332818);border:1px solid rgba(var(--lv-gs,198,161,91),.4);border-radius:calc(var(--btn-radius) - 2px);
+  padding:26px 32px;margin-bottom:20px;
+  box-shadow:0 32px 64px -30px rgba(20,13,4,0.22),0 10px 22px -12px rgba(20,13,4,0.14),inset 0 1px 0 rgba(255,255,255,0.7);
+}
+html[data-pc-theme="dark"] .exec-welcome,
+html[data-pc-theme="royal"] .exec-welcome{
   background:radial-gradient(650px 260px at 88% -20%, rgba(var(--lv-gbs,233,206,138),0.14), transparent 65%),
     linear-gradient(135deg, var(--navy-bg) 0%, var(--navy-deep-bg) 100%);
-  color:var(--ivory);border:1px solid var(--gold);border-radius:calc(var(--btn-radius) - 2px);
-  padding:26px 32px;margin-bottom:20px;
+  color:var(--ivory);border-color:var(--gold);
   box-shadow:0 34px 68px -28px rgba(0,0,0,0.5),inset 0 1px 0 rgba(var(--lv-bev,255,255,255),0.08);
 }
 /* Ambient gold system: the existing diagonal foil pattern now drifts
@@ -1434,8 +1449,31 @@ select.registrar-search-row-select{
 
    --lattice-glow/--lattice-line default to gold; the Atmosphere System
    below overrides them per office so each dashboard's own accent colour
-   runs through this same geometry instead of a separate pattern. */
+   runs through this same geometry instead of a separate pattern.
+
+   Pearl-white is the default ground (see the base .exec-welcome rule
+   above for why); the muted --lv-gs gold replaces --lv-gbs here for the
+   same reason the footer/gateway lattice needed it — bright gold is
+   close enough to pearl's own lightness to disappear against it. The
+   dark/royal-scoped block below keeps the original navy recipe. */
 .exec-welcome{
+  background-image:linear-gradient(100deg, transparent 30%, rgba(var(--lv-gs,198,161,91),0.14) 46%, transparent 62%),
+    radial-gradient(650px 260px at 88% -20%, rgba(var(--lv-gs,198,161,91),0.10), transparent 65%),
+    linear-gradient(90deg, var(--gold) 0, var(--gold) 24px, transparent 24px),
+    linear-gradient(180deg, var(--gold) 0, var(--gold) 24px, transparent 24px),
+    linear-gradient(90deg, var(--gold) 0, var(--gold) 24px, transparent 24px),
+    linear-gradient(180deg, var(--gold) 0, var(--gold) 24px, transparent 24px),
+    radial-gradient(420px 280px at var(--lattice-x,-10%) 45%, var(--lattice-glow, rgba(var(--lv-gs,198,161,91),.20)), transparent 68%),
+    repeating-linear-gradient(45deg, var(--lattice-line, rgba(var(--lv-gs,198,161,91),.16)) 0 1.5px, transparent 1.5px 72px),
+    repeating-linear-gradient(-45deg, var(--lattice-line, rgba(var(--lv-gs,198,161,91),.16)) 0 1.5px, transparent 1.5px 72px),
+    linear-gradient(168deg, var(--pearl,rgb(251,247,239)) 0%, var(--pearl-2,rgb(244,237,224)) 60%, var(--pearl-3,rgb(237,227,210)) 100%);
+  background-size:260% 100%, auto, 24px 1.5px, 1.5px 24px, 24px 1.5px, 1.5px 24px, auto, auto, auto, auto;
+  background-position:140% 0, 0 0, 18px 18px, 18px 18px, right 18px bottom 18px, right 18px bottom 18px, 0 0, 0 0, 0 0, 0 0;
+  background-repeat:repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat, no-repeat;
+  animation:exec-gold-sweep 2.2s ease-out 1.1s 1 both, shrs-lattice-glow 14s ease-in-out infinite;
+}
+html[data-pc-theme="dark"] .exec-welcome,
+html[data-pc-theme="royal"] .exec-welcome{
   background-image:linear-gradient(100deg, transparent 30%, rgba(var(--lv-gbs,233,206,138),0.16) 46%, transparent 62%),
     radial-gradient(650px 260px at 88% -20%, rgba(var(--lv-gbs,233,206,138),0.14), transparent 65%),
     linear-gradient(90deg, var(--gold-bright) 0, var(--gold-bright) 24px, transparent 24px),
@@ -1446,20 +1484,23 @@ select.registrar-search-row-select{
     repeating-linear-gradient(45deg, var(--lattice-line, rgba(var(--lv-gbs,233,206,138),.32)) 0 1.5px, transparent 1.5px 72px),
     repeating-linear-gradient(-45deg, var(--lattice-line, rgba(var(--lv-gbs,233,206,138),.32)) 0 1.5px, transparent 1.5px 72px),
     linear-gradient(135deg, var(--navy-bg) 0%, var(--navy-deep-bg) 100%);
-  background-size:260% 100%, auto, 24px 1.5px, 1.5px 24px, 24px 1.5px, 1.5px 24px, auto, auto, auto, auto;
-  background-position:140% 0, 0 0, 18px 18px, 18px 18px, right 18px bottom 18px, right 18px bottom 18px, 0 0, 0 0, 0 0, 0 0;
-  background-repeat:repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat, no-repeat;
-  animation:exec-gold-sweep 2.2s ease-out 1.1s 1 both, shrs-lattice-glow 14s ease-in-out infinite;
 }
 @keyframes exec-gold-sweep{
   0%{background-position:140% 0, 0 0, 18px 18px, 18px 18px, right 18px bottom 18px, right 18px bottom 18px, 0 0, 0 0, 0 0, 0 0;}
   100%{background-position:-40% 0, 0 0, 18px 18px, 18px 18px, right 18px bottom 18px, right 18px bottom 18px, 0 0, 0 0, 0 0, 0 0;}
 }
 @media (prefers-reduced-motion:reduce){.exec-welcome{animation:none;background-position:-40% 0, 0 0, 18px 18px, 18px 18px, right 18px bottom 18px, right 18px bottom 18px, 0 0, 0 0, 0 0, 0 0;}}
-@media (max-width:640px){.exec-welcome{background-image:linear-gradient(100deg, transparent 30%, rgba(var(--lv-gbs,233,206,138),0.16) 46%, transparent 62%),
+@media (max-width:640px){
+  .exec-welcome{background-image:linear-gradient(100deg, transparent 30%, rgba(var(--lv-gs,198,161,91),0.14) 46%, transparent 62%),
+    radial-gradient(650px 260px at 88% -20%, rgba(var(--lv-gs,198,161,91),0.10), transparent 65%),
+    linear-gradient(168deg, var(--pearl,rgb(251,247,239)) 0%, var(--pearl-2,rgb(244,237,224)) 60%, var(--pearl-3,rgb(237,227,210)) 100%);
+  background-size:260% 100%, auto, auto;background-repeat:repeat, no-repeat, no-repeat;}
+  html[data-pc-theme="dark"] .exec-welcome,
+  html[data-pc-theme="royal"] .exec-welcome{background-image:linear-gradient(100deg, transparent 30%, rgba(var(--lv-gbs,233,206,138),0.16) 46%, transparent 62%),
     radial-gradient(650px 260px at 88% -20%, rgba(var(--lv-gbs,233,206,138),0.14), transparent 65%),
     linear-gradient(135deg, var(--navy-bg) 0%, var(--navy-deep-bg) 100%);
-  background-size:260% 100%, auto, auto;background-repeat:repeat, no-repeat, no-repeat;}}
+  background-size:260% 100%, auto, auto;background-repeat:repeat, no-repeat, no-repeat;}
+}
 /* Institutional watermark: the same crest asset/opacity already used on
    marketing pages (css/brand.css .crest-watermark) — reused directly
    here (rather than sharing the class, which would collide with the
@@ -1474,8 +1515,8 @@ select.registrar-search-row-select{
 [dir="rtl"] .exec-welcome::after{right:auto;left:-30px;}
 @media (max-width:640px){.exec-welcome::after{width:170px;height:151px;right:-20px;}
   [dir="rtl"] .exec-welcome::after{left:-20px;}}
-.exec-welcome-eyebrow{font-size:0.8rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:6px;}
-.exec-welcome h1{font-family:'Cinzel','Amiri',serif;font-size:1.55rem;line-height:1.15;margin:0 0 12px;color:#fff;position:relative;padding-bottom:8px;}
+.exec-welcome-eyebrow{font-size:0.8rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgb(var(--lv-gt2,138,106,47));margin-bottom:6px;}
+.exec-welcome h1{font-family:'Cinzel','Amiri',serif;font-size:1.55rem;line-height:1.15;margin:0 0 12px;color:var(--pearl-ink,#332818);position:relative;padding-bottom:8px;}
 /* Ceremonial letterhead rule (Imperial Luxury Experience Directive):
    every institutional office title is framed the way a royal decree or
    an Oxford/Harvard annual report frames its own title — a heavier
@@ -1483,28 +1524,53 @@ select.registrar-search-row-select{
    One CSS treatment, zero new markup, reused by every office. */
 .exec-welcome h1::after{
   content:'';position:absolute;left:1px;bottom:0;width:96px;height:9px;pointer-events:none;
-  background-image:linear-gradient(90deg, var(--gold-bright) 0%, var(--gold-bright) 100%),
-    linear-gradient(90deg, var(--gold-bright) 0%, var(--gold-bright) 100%);
+  background-image:linear-gradient(90deg, var(--gold) 0%, var(--gold) 100%),
+    linear-gradient(90deg, var(--gold) 0%, var(--gold) 100%);
   background-size:100% 2px, 42% 1px;
   background-position:0 0, 0 7px;
   background-repeat:no-repeat;
   opacity:0.92;
 }
 [dir="rtl"] .exec-welcome h1::after{left:auto;right:1px;}
-.exec-welcome-role{font-size:0.92rem;color:rgba(var(--lv-w00,248,244,233),0.78);margin-bottom:4px;}
-.exec-welcome-motto{font-family:'Cormorant Garamond','Amiri',serif;font-style:italic;font-size:0.98rem;color:var(--gold-bright);margin-bottom:14px;}
-.exec-welcome-stats{display:flex;flex-wrap:wrap;gap:14px 30px;padding-top:14px;border-top:1px solid rgba(var(--lv-gbs,233,206,138),0.25);}
+.exec-welcome-role{font-size:0.92rem;color:var(--pearl-ink-2,#57472f);margin-bottom:4px;}
+.exec-welcome-motto{font-family:'Cormorant Garamond','Amiri',serif;font-style:italic;font-size:0.98rem;color:rgb(var(--lv-gt2,138,106,47));margin-bottom:14px;}
+.exec-welcome-stats{display:flex;flex-wrap:wrap;gap:14px 30px;padding-top:14px;border-top:1px solid rgba(var(--lv-gs,198,161,91),0.3);}
 .exec-welcome-stat{display:flex;flex-direction:column;}
-.exec-welcome-stat .value{font-family:'Cinzel','Amiri',serif;font-size:1.4rem;color:var(--gold-bright);}
-.exec-welcome-stat .label{font-size:0.74rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:rgba(var(--lv-w00,248,244,233),0.75);}
+.exec-welcome-stat .value{font-family:'Cinzel','Amiri',serif;font-size:1.4rem;color:rgb(var(--lv-gt2,138,106,47));}
+.exec-welcome-stat .label{font-size:0.74rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--pearl-ink-2,#57472f);}
 .exec-welcome-stat .trend{font-size:0.72rem;font-weight:600;margin-top:2px;display:inline-flex;align-items:center;gap:3px;}
-.exec-welcome-stat .trend.is-up{color:#7fd99a;}
+.exec-welcome-stat .trend.is-up{color:#2f8a52;}
 .exec-welcome-stat .trend.is-down{color:rgb(var(--lv-w73,224,138,138));}
 .exec-welcome-stat .trend svg{width:11px;height:11px;}
 .exec-welcome-health{
   display:inline-flex;align-items:center;gap:8px;margin-top:16px;padding:6px 16px;
-  border:1px solid rgba(var(--lv-gbs,233,206,138),0.4);border-radius:999px;background:rgba(0,0,0,0.15);
-  font-family:'Cinzel','Amiri',serif;font-size:0.76rem;letter-spacing:0.05em;
+  border:1px solid rgba(var(--lv-gs,198,161,91),0.35);border-radius:999px;background:rgba(var(--lv-gs,198,161,91),0.08);
+  font-family:'Cinzel','Amiri',serif;font-size:0.76rem;letter-spacing:0.05em;color:var(--pearl-ink,#332818);
+}
+html[data-pc-theme="dark"] .exec-welcome-eyebrow,
+html[data-pc-theme="royal"] .exec-welcome-eyebrow{color:var(--gold-bright);}
+html[data-pc-theme="dark"] .exec-welcome h1,
+html[data-pc-theme="royal"] .exec-welcome h1{color:#fff;}
+html[data-pc-theme="dark"] .exec-welcome h1::after,
+html[data-pc-theme="royal"] .exec-welcome h1::after{
+  background-image:linear-gradient(90deg, var(--gold-bright) 0%, var(--gold-bright) 100%),
+    linear-gradient(90deg, var(--gold-bright) 0%, var(--gold-bright) 100%);
+}
+html[data-pc-theme="dark"] .exec-welcome-role,
+html[data-pc-theme="royal"] .exec-welcome-role{color:rgba(var(--lv-w00,248,244,233),0.78);}
+html[data-pc-theme="dark"] .exec-welcome-motto,
+html[data-pc-theme="royal"] .exec-welcome-motto{color:var(--gold-bright);}
+html[data-pc-theme="dark"] .exec-welcome-stats,
+html[data-pc-theme="royal"] .exec-welcome-stats{border-top-color:rgba(var(--lv-gbs,233,206,138),0.25);}
+html[data-pc-theme="dark"] .exec-welcome-stat .value,
+html[data-pc-theme="royal"] .exec-welcome-stat .value{color:var(--gold-bright);}
+html[data-pc-theme="dark"] .exec-welcome-stat .label,
+html[data-pc-theme="royal"] .exec-welcome-stat .label{color:rgba(var(--lv-w00,248,244,233),0.75);}
+html[data-pc-theme="dark"] .exec-welcome-stat .trend.is-up,
+html[data-pc-theme="royal"] .exec-welcome-stat .trend.is-up{color:#7fd99a;}
+html[data-pc-theme="dark"] .exec-welcome-health,
+html[data-pc-theme="royal"] .exec-welcome-health{
+  border-color:rgba(var(--lv-gbs,233,206,138),0.4);background:rgba(0,0,0,0.15);color:inherit;
 }
 .exec-welcome-health .dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto;animation:health-dot-pulse 2.4s ease-in-out infinite;}
 /* Hero row — the welcome banner beside its own digital credential,
