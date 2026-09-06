@@ -1178,7 +1178,11 @@ html[data-pc-theme="light"][data-pc-livery="pearl"] .mobile-nav-ribbon::after{
    ("gold stays gold... the crimson accent lives separately, scoped to
    specific components — primary CTAs, the Personalisation accent slot —
    not baked in wholesale"). These six cards are not a CTA rail, so they
-   stay in the house gold, only the plate itself turns platinum. */
+   stay in the house gold, only the plate itself turns platinum.
+   The icon mount itself is deliberately left unset here: css/armorial.css
+   now strikes .wf-ico the same as every other mount on the site (turned
+   metal, gold rim-light, engraved glyph), and a pearl-scoped background
+   here would only outrank it by specificity and flatten it back out. */
 html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-card{
   background:
     linear-gradient(180deg,rgba(255,255,255,.7),transparent 42%),
@@ -1190,19 +1194,62 @@ html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-card:focus-visible{
   box-shadow:inset 0 1px 0 rgba(255,255,255,.95),
              0 22px 40px -26px rgba(59,42,29,.35),
              0 0 0 1px rgba(198,161,91,.3);}
-html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-ico{
-  color:#7C5E28;border-color:rgba(198,161,91,.5);
-  background:radial-gradient(120% 120% at 50% 0%,
-    rgba(233,206,138,.45),rgba(255,255,255,.6) 74%);}
-html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-card:hover .wf-ico{
-  border-color:#8C6834;
-  box-shadow:0 0 22px -4px rgba(198,161,91,.7);}
 html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-k{color:#2A2118;}
 html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-k::after{
   background:linear-gradient(90deg,#8C6834,transparent);}
 [dir="rtl"] html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-k::after{
   background:linear-gradient(270deg,#8C6834,transparent);}
 html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-go{color:rgb(140,96,21);}
+
+/* ---- Each door its own colour. Six identical gold cards in a row read
+   as one repeated tile; six doors to six different kinds of visitor
+   read better as six distinct plates, the way the institution cards
+   already carry sapphire/forest-green/terracotta/rosewood identities
+   rather than one house colour repeated five times. The gold rim-light
+   and the corner frame (css/armorial.css) stay gold on every card
+   regardless — that is the constant that says "one house"; the mount's
+   inner tint, the glyph, the underline and the border are what vary. */
+html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-card[data-accent="sapphire"]{--door-accent:63,76,140;}
+html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-card[data-accent="forest-green"]{--door-accent:63,107,78;}
+html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-card[data-accent="terracotta"]{--door-accent:150,78,36;}
+html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-card[data-accent="rosewood"]{--door-accent:140,74,87;}
+html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-card[data-accent="bronze"]{--door-accent:124,84,48;}
+html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-card[data-accent="crimson"]{--door-accent:110,38,34;}
+
+html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-card[data-accent]{
+  border-color:rgba(var(--door-accent),.3);}
+html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-card[data-accent]:hover,
+html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-card[data-accent]:focus-visible{
+  border-color:rgb(var(--door-accent));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.95),
+             0 22px 40px -26px rgba(59,42,29,.35),
+             0 0 0 1px rgba(var(--door-accent),.34);}
+/* Same four-layer stack armorial.css strikes every mount with — the
+   turned-metal texture and the white highlight are kept verbatim, only
+   the final tint swaps from gold to the door's own colour, so the mount
+   still reads as struck metal, just cast in a different alloy. */
+html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-card[data-accent] .wf-ico{
+  color:rgb(var(--door-accent));
+  border-color:rgba(var(--door-accent),.4);
+  background:
+    var(--arm-studs),
+    radial-gradient(circle at 32% 26%, rgba(255,255,255,.85), transparent 58%),
+    var(--arm-turned),
+    linear-gradient(146deg,
+      rgba(var(--door-accent),.26),
+      rgba(var(--door-accent),.08) 54%,
+      rgba(var(--door-accent),.2));}
+html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-card[data-accent]:hover .wf-ico{
+  border-color:rgb(var(--door-accent));
+  box-shadow:var(--arm-strike),
+             0 18px 34px -16px rgba(var(--door-accent),.5),
+             0 0 22px -4px rgba(var(--door-accent),.5);}
+html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-card[data-accent] .wf-k::after{
+  background:linear-gradient(90deg,rgb(var(--door-accent)),transparent);}
+[dir="rtl"] html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-card[data-accent] .wf-k::after{
+  background:linear-gradient(270deg,rgb(var(--door-accent)),transparent);}
+html[data-pc-theme="light"][data-pc-livery="pearl"] .wf-card[data-accent] .wf-go{
+  color:rgb(var(--door-accent));}
 
 /* Only Midnight takes the dark plate. The Royal edition is black and
    gold in its CHROME and cream in its PAGES — a first draft gave these

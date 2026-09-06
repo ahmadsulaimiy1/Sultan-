@@ -96,10 +96,15 @@ html[data-pc-theme="dark"]{
    2. THE CHASED MOUNT
    -------------------------------------------------------------------
    .pr-ico appears on fifty-one cards across the site and .pr-quad-ico
-   on the crest. Same object, struck instead of drawn.
-   ------------------------------------------------------------------- */
+   on the crest. Same object, struck instead of drawn. .wf-ico (the
+   homepage's "Six Ways In") is the same mount and takes the same
+   strike — it was built earlier than this file and was left as a flat
+   drawn circle by omission, not by design. (.gateway-card-icon is the
+   same shape again but keeps its own !important background in
+   masthead.css for now, so adding it here would silently do nothing.) */
 .pr-ico,
-.pr-quad-ico{
+.pr-quad-ico,
+.wf-ico{
   position:relative;isolation:isolate;overflow:visible;
   background:
     var(--arm-studs),
@@ -116,6 +121,7 @@ html[data-pc-theme="dark"]{
 }
 html[data-pc-theme="dark"] .pr-ico,
 html[data-pc-theme="dark"] .pr-quad-ico,
+html[data-pc-theme="dark"] .wf-ico,
 .pr-section.is-royal .pr-ico,
 .pr-section.is-royal .pr-quad-ico{
   background:
@@ -133,6 +139,7 @@ html[data-pc-theme="dark"] .pr-quad-ico,
    than as an animation running on the page. */
 .pr-ico::after,
 .pr-quad-ico::after,
+.wf-ico::after,
 .page-hero-icon::after{
   content:"";position:absolute;inset:-1px;border-radius:inherit;z-index:2;
   padding:1px;pointer-events:none;
@@ -155,9 +162,15 @@ html[data-pc-theme="dark"] .pr-quad-ico,
 .pr-grid > *:nth-child(4) .pr-ico::after{--arm-dly:-8.8s;--arm-dur:14s;}
 .pr-grid > *:nth-child(5) .pr-ico::after{--arm-dly:-2.4s;--arm-dur:12s;}
 .pr-grid > *:nth-child(6) .pr-ico::after{--arm-dly:-7.1s;--arm-dur:10s;}
+.wf-grid > *:nth-child(2) .wf-ico::after{--arm-dly:-3.1s;--arm-dur:13s;}
+.wf-grid > *:nth-child(3) .wf-ico::after{--arm-dly:-6.4s;--arm-dur:11.5s;}
+.wf-grid > *:nth-child(4) .wf-ico::after{--arm-dly:-8.8s;--arm-dur:14s;}
+.wf-grid > *:nth-child(5) .wf-ico::after{--arm-dly:-2.4s;--arm-dur:12s;}
+.wf-grid > *:nth-child(6) .wf-ico::after{--arm-dly:-7.1s;--arm-dur:10s;}
 @keyframes arm-turn{to{--arm-ang:360deg;}}
 
 .pr-card:hover .pr-ico,
+.wf-card:hover .wf-ico,
 .mo-lift:hover .pr-ico,
 .pr-quad:hover .pr-quad-ico{
   transform:translateY(-4px) scale(1.05);
@@ -166,6 +179,7 @@ html[data-pc-theme="dark"] .pr-quad-ico,
              0 0 26px -6px rgba(var(--lv-gb,233,206,138),.5);
 }
 .pr-card:hover .pr-ico::after,
+.wf-card:hover .wf-ico::after,
 .pr-quad:hover .pr-quad-ico::after{opacity:1;}
 
 /* -------------------------------------------------------------------
@@ -233,6 +247,7 @@ html[data-pc-theme="dark"] .page-hero-icon{
    ------------------------------------------------------------------- */
 .pr-ico svg,
 .page-hero-icon svg,
+.wf-ico svg,
 .pr-quad-ico svg{
   position:relative;z-index:1;
   stroke-linecap:round;stroke-linejoin:round;
@@ -242,6 +257,7 @@ html[data-pc-theme="dark"] .page-hero-icon{
 }
 html[data-pc-theme="dark"] .pr-ico svg,
 html[data-pc-theme="dark"] .page-hero-icon svg,
+html[data-pc-theme="dark"] .wf-ico svg,
 html[data-pc-theme="dark"] .pr-quad-ico svg,
 .pr-section.is-royal .pr-ico svg,
 .pr-section.is-royal .pr-quad-ico svg{
@@ -249,6 +265,7 @@ html[data-pc-theme="dark"] .pr-quad-ico svg,
          drop-shadow(0 0 6px rgba(var(--lv-gb,233,206,138),.35));
 }
 .pr-card:hover .pr-ico svg,
+.wf-card:hover .wf-ico svg,
 .pr-quad:hover .pr-quad-ico svg{transform:scale(1.06);}
 /* An image in the mount — the crest quadrants — is lit, not stroked. */
 .pr-quad-ico img{position:relative;z-index:1;
@@ -273,7 +290,8 @@ html[data-pc-theme="dark"] .pr-ico .pr-letter{
    it closes on address.
    ------------------------------------------------------------------- */
 .pr-card{position:relative;}
-.pr-card::after{
+.pr-card::after,
+.wf-card::after{
   content:"";position:absolute;inset:7px;border-radius:inherit;pointer-events:none;
   border:1px solid rgba(var(--lv-g,198,161,91),.52);
   /* 26%, not 30%: on a wide card two 30% patches per edge very nearly
@@ -293,11 +311,14 @@ html[data-pc-theme="dark"] .pr-ico .pr-letter{
              -webkit-mask-size .6s var(--arm-ease), mask-size .6s var(--arm-ease),
              border-color .5s var(--arm-ease);
 }
-.pr-card:hover::after{
+.pr-card:hover::after,
+.wf-card:hover::after,
+.wf-card:focus-visible::after{
   border-color:rgba(var(--lv-gb,233,206,138),.85);
   -webkit-mask-size:50% 50%; mask-size:50% 50%;
 }
-html[data-pc-theme="dark"] .pr-card::after{border-color:rgba(var(--lv-gb,233,206,138),.34);}
+html[data-pc-theme="dark"] .pr-card::after,
+html[data-pc-theme="dark"] .wf-card::after{border-color:rgba(var(--lv-gb,233,206,138),.34);}
 
 /* -------------------------------------------------------------------
    6. ORNAMENTS
@@ -380,18 +401,20 @@ html[data-pc-theme="dark"] .arm-plate{
    8. MOTION: REDUCED
    ------------------------------------------------------------------- */
 @media (prefers-reduced-motion:reduce){
-  .pr-ico::after,.pr-quad-ico::after,.page-hero-icon::after{animation:none!important;opacity:.65;}
-  .pr-card::after{transition:none!important;}
+  .pr-ico::after,.pr-quad-ico::after,.wf-ico::after,.page-hero-icon::after{animation:none!important;opacity:.65;}
+  .pr-card::after,.wf-card::after{transition:none!important;}
   .arm-sheen{-webkit-text-fill-color:currentColor;background-image:none;}
 }
 html[data-pc-motion="reduced"] .pr-ico::after,
 html[data-pc-motion="reduced"] .pr-quad-ico::after,
+html[data-pc-motion="reduced"] .wf-ico::after,
 html[data-pc-motion="reduced"] .page-hero-icon::after{animation:none!important;opacity:.65;}
-html[data-pc-motion="reduced"] .pr-card::after{transition:none!important;}
+html[data-pc-motion="reduced"] .pr-card::after,
+html[data-pc-motion="reduced"] .wf-card::after{transition:none!important;}
 html[data-pc-motion="reduced"] .arm-sheen{-webkit-text-fill-color:currentColor;background-image:none;}
 
 /* Printing gets the object, not the light. */
 @media print{
-  .pr-ico::after,.pr-quad-ico::after,.page-hero-icon::after,.pr-card::after{display:none;}
+  .pr-ico::after,.pr-quad-ico::after,.wf-ico::after,.page-hero-icon::after,.pr-card::after,.wf-card::after{display:none;}
   .arm-sheen{-webkit-text-fill-color:currentColor;background-image:none;}
 }
