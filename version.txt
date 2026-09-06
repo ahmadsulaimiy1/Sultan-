@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      48e26f76acec831dd23fea69aee07f5184d9870c
-short       48e26f76
+commit      b7de1050c15ed148fd093678512db32031b66940
+short       b7de1050
 branch      claude/true-white-header-footer
-subject     Merge pull request #34: Remove every remaining black overlay from photographs, site-wide
-built (UTC) 2026-09-04T17:00:38Z
-assets      shrs-pwa-c4d43793e2
+subject     Turn cream/coffee-brown chrome to platinum white, invalidate stale personalisation
+built (UTC) 2026-09-06T07:17:01Z
+assets      shrs-pwa-71359620e1
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run
