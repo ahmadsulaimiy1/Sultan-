@@ -390,7 +390,9 @@ html[data-pc-theme="royal"] .portal-topbar-link:hover{color:#FFF6DF!important;}
   transform:rotate(45deg);margin-top:-3px;transition:transform .25s ease;
 }
 .pch-menu[open] .pch-menu-toggle::after{transform:rotate(-135deg);margin-top:2px;}
-.pch-menu-toggle:hover{border-color:var(--gold);background:rgba(var(--lv-gs,198,161,91),.16);}
+.pch-menu-toggle:hover,
+.pch-menu-toggle:focus-visible{border-color:var(--gold);background:rgba(var(--lv-gs,198,161,91),.16);}
+.pch-menu-toggle:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
 .pch-menu-panel{
   /* Anchored to the toggle's START edge, not its end: the toggle sits
      mid-header (topbar links come well before the far-right language/
@@ -419,7 +421,9 @@ html[data-pc-theme="royal"] .portal-topbar-link:hover{color:#FFF6DF!important;}
   border-inline-end:1px solid rgba(var(--lv-gs,198,161,91),.22);
 }
 .pch-menu-item:nth-child(2n){border-inline-end:none;}
-.pch-menu-item:hover{background:rgba(var(--lv-gs,198,161,91),.1);}
+.pch-menu-item:hover,
+.pch-menu-item:focus-visible{background:rgba(var(--lv-gs,198,161,91),.1);}
+.pch-menu-item:focus-visible{outline:2px solid var(--gold);outline-offset:-2px;}
 .pch-menu-item-title{font-family:'Cinzel',serif;font-size:0.9rem;color:var(--pearl-ink);}
 .pch-menu-item-desc{font-size:0.76rem;line-height:1.4;color:var(--pearl-ink-2);}
 /* 820px, not 640px: the anchored grid-panel above assumes the toggle sits
@@ -441,7 +445,11 @@ html[data-pc-theme="royal"] .pch-menu-toggle{
   background:linear-gradient(150deg,rgba(233,206,138,.14),rgba(233,206,138,.05));
 }
 html[data-pc-theme="dark"] .pch-menu-toggle:hover,
-html[data-pc-theme="royal"] .pch-menu-toggle:hover{border-color:var(--gold-bright);background:rgba(233,206,138,.16);}
+html[data-pc-theme="royal"] .pch-menu-toggle:hover,
+html[data-pc-theme="dark"] .pch-menu-toggle:focus-visible,
+html[data-pc-theme="royal"] .pch-menu-toggle:focus-visible{border-color:var(--gold-bright);background:rgba(233,206,138,.16);}
+html[data-pc-theme="dark"] .pch-menu-toggle:focus-visible,
+html[data-pc-theme="royal"] .pch-menu-toggle:focus-visible{outline-color:var(--gold-bright);}
 html[data-pc-theme="dark"] .pch-menu-panel,
 html[data-pc-theme="royal"] .pch-menu-panel{
   background-image:
@@ -452,7 +460,11 @@ html[data-pc-theme="royal"] .pch-menu-panel{
 html[data-pc-theme="dark"] .pch-menu-item,
 html[data-pc-theme="royal"] .pch-menu-item{border-color:rgba(233,206,138,.18);}
 html[data-pc-theme="dark"] .pch-menu-item:hover,
-html[data-pc-theme="royal"] .pch-menu-item:hover{background:rgba(233,206,138,.1);}
+html[data-pc-theme="royal"] .pch-menu-item:hover,
+html[data-pc-theme="dark"] .pch-menu-item:focus-visible,
+html[data-pc-theme="royal"] .pch-menu-item:focus-visible{background:rgba(233,206,138,.1);}
+html[data-pc-theme="dark"] .pch-menu-item:focus-visible,
+html[data-pc-theme="royal"] .pch-menu-item:focus-visible{outline-color:var(--gold-bright);}
 html[data-pc-theme="dark"] .pch-menu-item-title,
 html[data-pc-theme="royal"] .pch-menu-item-title{color:#FFF6DF;}
 html[data-pc-theme="dark"] .pch-menu-item-desc,

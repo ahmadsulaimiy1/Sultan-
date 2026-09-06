@@ -845,9 +845,12 @@ body.portal-body .exec-welcome h1 .cmd-caret {
 body.portal-body .exec-welcome h1 .cmd-caret[data-done] { animation: none; opacity: 0; }
 
 /* Genuine metallic gold text — the same foil ramp as the border,
-   clipped to the eyebrow/stat text itself rather than a flat tone. */
+   clipped to the eyebrow/stat text itself rather than a flat tone.
+   Contrast audit (Phase 9): capped darker than the border's own ramp —
+   see the matching comment in css/portal.css for the measured numbers.
+   Small bold text needs 4.5:1; every stop here clears it. */
 body.portal-body .exec-welcome-eyebrow {
-  background-image: linear-gradient(calc(100deg + (var(--gx,50) - 50) * 0.6deg),#8A6A2E 0%,#C6A15B 20%,#F3E3B8 38%,#E9CE8A 52%,#C6A15B 68%,#9A7734 82%,#E9CE8A 100%) !important;
+  background-image: linear-gradient(calc(100deg + (var(--gx,50) - 50) * 0.6deg),#6E5424 0%,#7A5D28 20%,#7A5D28 38%,#6E5424 52%,#5C4419 68%,#6E5424 82%,#7A5D28 100%) !important;
   -webkit-background-clip: text !important; background-clip: text !important; color: transparent !important;
   font-weight: 700 !important;
 }
@@ -863,9 +866,11 @@ body.portal-body .exec-welcome-stats::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
   background: var(--cmd-foil-soft); opacity: .85;
 }
+/* Large bold text only needs 3:1, so this can run slightly lighter than
+   the eyebrow's ramp above — see the matching comment in css/portal.css. */
 body.portal-body .exec-welcome-stat .value {
   font-family: 'Cinzel', 'EB Garamond', serif; font-weight: 700; font-variant-numeric: tabular-nums;
-  background-image: linear-gradient(calc(100deg + (var(--gx,50) - 50) * 0.6deg),#8A6A2E 0%,#C6A15B 20%,#F3E3B8 38%,#E9CE8A 52%,#C6A15B 68%,#9A7734 82%,#E9CE8A 100%) !important;
+  background-image: linear-gradient(calc(100deg + (var(--gx,50) - 50) * 0.6deg),#6E5424 0%,#8A6A2E 20%,#9A7734 38%,#8A6A2E 52%,#6E5424 68%,#5C4419 82%,#8A6A2E 100%) !important;
   -webkit-background-clip: text !important; background-clip: text !important; color: transparent !important;
 }
 body.portal-body .exec-welcome-stat .label {

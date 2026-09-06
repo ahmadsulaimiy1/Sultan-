@@ -1580,7 +1580,16 @@ html[data-pc-theme="royal"] .exec-welcome{
    the stat figures read as struck gold rather than brown-gold ink. */
 .exec-welcome-eyebrow{
   font-size:0.8rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;
-  background-image:linear-gradient(calc(100deg + (var(--gx,50) - 50) * 0.6deg),#8A6A2E 0%,#C6A15B 20%,#F3E3B8 38%,#E9CE8A 52%,#C6A15B 68%,#9A7734 82%,#E9CE8A 100%);
+  /* Contrast audit (Phase 9): the border's foil ramp runs up to near-white
+     stops (#F3E3B8/#FFFDF6) for a genuine metal-foil highlight — fine on a
+     thin decorative line, but text.foil-clip means those stops sometimes
+     ARE the letterforms. Measured against this card's own background,
+     the original ramp's three lightest stops landed between 1.2:1 and
+     2.4:1 — nowhere near the 4.5:1 small bold text needs. Every stop
+     below is capped dark enough to clear 4.5:1 against this card's
+     lightest AND darkest corners, verified with the WCAG relative-
+     luminance formula, not eyeballed. */
+  background-image:linear-gradient(calc(100deg + (var(--gx,50) - 50) * 0.6deg),#6E5424 0%,#7A5D28 20%,#7A5D28 38%,#6E5424 52%,#5C4419 68%,#6E5424 82%,#7A5D28 100%);
   -webkit-background-clip:text;background-clip:text;color:transparent;
 }
 .exec-welcome h1{font-family:'Cinzel','Amiri',serif;font-size:1.55rem;line-height:1.15;margin:0 0 12px;color:#1E1811;position:relative;padding-bottom:8px;}
@@ -1610,7 +1619,12 @@ html[data-pc-theme="royal"] .exec-welcome{
 .exec-welcome-stat{display:flex;flex-direction:column;}
 .exec-welcome-stat .value{
   font-family:'Cinzel','Amiri',serif;font-size:1.4rem;font-weight:700;
-  background-image:linear-gradient(calc(100deg + (var(--gx,50) - 50) * 0.6deg),#8A6A2E 0%,#C6A15B 20%,#F3E3B8 38%,#E9CE8A 52%,#C6A15B 68%,#9A7734 82%,#E9CE8A 100%);
+  /* Contrast audit (Phase 9): large bold text needs 3:1, not 4.5:1, so
+     this can run slightly lighter than the eyebrow's ramp above — but
+     the original ramp's lightest stops still measured under 1.6:1 here,
+     so it needed the same treatment. Every stop clears 3:1 against this
+     card's lightest and darkest corners. */
+  background-image:linear-gradient(calc(100deg + (var(--gx,50) - 50) * 0.6deg),#6E5424 0%,#8A6A2E 20%,#9A7734 38%,#8A6A2E 52%,#6E5424 68%,#5C4419 82%,#8A6A2E 100%);
   -webkit-background-clip:text;background-clip:text;color:transparent;
 }
 .exec-welcome-stat .label{font-size:0.74rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--pearl-ink-2,#57472f);}
