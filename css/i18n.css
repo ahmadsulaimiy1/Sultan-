@@ -154,11 +154,28 @@
   margin: 0;
   padding: 6px;
   list-style: none;
-  background: var(--navy-deep-bg, #221709);
-  border: 1px solid rgba(var(--lv-gbs, 233, 206, 138), 0.32);
+  /* Genuine glass, sitewide: this panel is a transient overlay (opens on
+     click, closes on selection/blur) rather than a permanent
+     text-bearing surface, so it's held to the opposite rule from
+     .gateway-card/.portal-child-card — those two are exactly where this
+     codebase already tried backdrop-filter and reverted it, twice, for
+     reading hazy. A dropdown that vanishes the moment it's not needed
+     has no such readability stake. */
+  background: rgba(26, 18, 9, .78);
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  border: 2px solid transparent;
+  background-image:
+    linear-gradient(rgba(26, 18, 9, .78), rgba(26, 18, 9, .78)),
+    linear-gradient(100deg, #8a6a2e 0%, #c6a15b 20%, #f3e3b8 38%, #fffdf6 52%, #e9ce8a 68%, #c6a15b 84%, #e9ce8a 100%);
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
   border-radius: var(--btn-radius, 3px);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.42);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(233,206,138,.14);
+  animation: lang-switch-materialize .2s cubic-bezier(.2,.9,.3,1) both;
 }
+@keyframes lang-switch-materialize{from{opacity:0;transform:scale(.97) translateY(-3px);}to{opacity:1;transform:none;}}
+@media (prefers-reduced-motion: reduce){.lang-switch-menu{animation:none;}}
 
 .lang-switch-menu li { margin: 0; }
 

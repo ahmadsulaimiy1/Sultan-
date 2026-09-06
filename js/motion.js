@@ -250,12 +250,18 @@
      and .mo-tilt directly, same convention as .mo-spot/.mo-mag above. */
   function initTilt() {
     if (reduce || !hasHover) return;
-    document.querySelectorAll('.gateway-card, .mo-tilt').forEach(function (card) {
+    document.querySelectorAll('.gateway-card, .portal-child-card, .mo-tilt').forEach(function (card) {
       var raf = null, rx = 0, ry = 0;
-      var max = parseFloat(card.getAttribute('data-tilt') || '5');
+      // .portal-child-card sits in denser grids (office tiles, class
+      // rosters) than the eight gateway doors, so it gets a shallower
+      // tilt and a shorter lift — "responsive metal," not a gimmick that
+      // fights the surrounding grid for attention.
+      var isChildCard = card.classList.contains('portal-child-card');
+      var max = parseFloat(card.getAttribute('data-tilt') || (isChildCard ? '2.5' : '5'));
+      var lift = isChildCard ? -4 : -9;
       function apply() {
         raf = null;
-        card.style.transform = 'perspective(900px) translateY(-9px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg)';
+        card.style.transform = 'perspective(900px) translateY(' + lift + 'px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg)';
       }
       card.addEventListener('pointermove', function (e) {
         var r = card.getBoundingClientRect();

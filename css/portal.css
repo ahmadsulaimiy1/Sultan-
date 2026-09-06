@@ -478,7 +478,14 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
     inset 0 -10px 18px -14px rgba(var(--lv-w04,20,13,4),0.14);
   margin-bottom:18px;
   position:relative;
+  transform-style:preserve-3d;
 }
+/* js/motion.js's initTilt writes a fresh transform every frame while
+   the pointer moves; a slower CSS transition on transform (the
+   atmosphere-scoped hover rule below has one) would fight that and
+   read as laggy — same fix, same reasoning as .gateway-card.is-tilted
+   in css/prestige.css. */
+.portal-child-card.is-tilted{transition:box-shadow .3s ease,border-color .3s ease;will-change:transform;}
 /* Same premium-tone rotation as .pfd-section, so the office grid reads
    as considered variety, not a stack of identical white boxes. */
 .portal-child-card:nth-of-type(3n+2){background:linear-gradient(165deg,#F7F8F8 0%,#EBECEA 100%);}
