@@ -364,6 +364,91 @@ html[data-pc-theme="dark"] .portal-topbar-link,
 html[data-pc-theme="royal"] .portal-topbar-link{color:rgba(var(--lv-p3,247,238,223),.86)!important;}
 html[data-pc-theme="dark"] .portal-topbar-link:hover,
 html[data-pc-theme="royal"] .portal-topbar-link:hover{color:#FFF6DF!important;}
+
+/* ---- The executive menu-grid (Phase 7, Scope A) ---------------------
+   Where a page's topbar carried more than one .portal-topbar-link pill,
+   a single <details class="pch-menu"> disclosure now opens a real grid
+   of link cells instead — same idiom as .lang-switch (a native
+   <details>, no JS), each cell carrying a description, not just a
+   label. The panel is genuine glass (backdrop-filter), the same
+   treatment as .office-switcher-menu and for the same reason: this is
+   a transient overlay that vanishes the moment it closes, not a
+   permanent content surface — the one place blur belongs here. */
+.pch-menu{position:relative;}
+.pch-menu-toggle{
+  list-style:none;cursor:pointer;user-select:none;
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:'Inter',sans-serif;font-size:0.82rem;font-weight:600;letter-spacing:0.02em;
+  padding:9px 16px;border-radius:99px;
+  border:1px solid var(--pearl-line);color:rgb(var(--lv-gt2,138,106,47));
+  background:linear-gradient(150deg,rgba(var(--lv-gs,198,161,91),.14),rgba(var(--lv-gs,198,161,91),.05));
+  transition:background .3s ease,border-color .3s ease,color .3s ease;
+}
+.pch-menu-toggle::-webkit-details-marker{display:none;}
+.pch-menu-toggle::after{
+  content:'';width:7px;height:7px;border-inline-end:1.5px solid currentColor;border-block-end:1.5px solid currentColor;
+  transform:rotate(45deg);margin-top:-3px;transition:transform .25s ease;
+}
+.pch-menu[open] .pch-menu-toggle::after{transform:rotate(-135deg);margin-top:2px;}
+.pch-menu-toggle:hover{border-color:var(--gold);background:rgba(var(--lv-gs,198,161,91),.16);}
+.pch-menu-panel{
+  /* Anchored to the toggle's START edge, not its end: the toggle sits
+     mid-header (topbar links come well before the far-right language/
+     sign-out cluster), so a wide panel anchored to its right edge would
+     overflow off the left of the viewport — confirmed by screenshot,
+     not assumed. Anchoring left and growing rightward uses the open
+     space that's actually there. */
+  position:absolute;top:calc(100% + 10px);inset-inline-start:0;z-index:60;
+  width:min(560px,86vw);max-height:74vh;overflow-y:auto;
+  display:grid;grid-template-columns:1fr 1fr;
+  background:rgba(255,255,255,.72);backdrop-filter:blur(22px) saturate(1.7);-webkit-backdrop-filter:blur(22px) saturate(1.7);
+  border:2px solid transparent;border-radius:14px;
+  background-image:
+    linear-gradient(rgba(255,255,255,.72),rgba(255,255,255,.72)),
+    linear-gradient(calc(100deg + (var(--gx,50) - 50) * 0.6deg),#8a6a2e 0%,#c6a15b 20%,#f3e3b8 38%,#fffdf6 52%,#e9ce8a 68%,#c6a15b 84%,#e9ce8a 100%);
+  background-origin:padding-box,border-box;background-clip:padding-box,border-box;
+  box-shadow:0 30px 60px -24px rgba(20,13,4,.35),0 10px 24px -12px rgba(20,13,4,.2),inset 0 1px 0 rgba(255,255,255,.9);
+  animation:pch-menu-materialize .22s cubic-bezier(.2,.9,.3,1) both;transform-origin:top left;
+}
+[dir="rtl"] .pch-menu-panel{transform-origin:top right;}
+@keyframes pch-menu-materialize{from{opacity:0;transform:scale(.96) translateY(-4px);}to{opacity:1;transform:none;}}
+@media (prefers-reduced-motion:reduce){.pch-menu-panel{animation:none;}}
+.pch-menu-item{
+  display:flex;flex-direction:column;gap:3px;padding:16px 18px;text-decoration:none;
+  border-bottom:1px solid rgba(var(--lv-gs,198,161,91),.22);
+  border-inline-end:1px solid rgba(var(--lv-gs,198,161,91),.22);
+}
+.pch-menu-item:nth-child(2n){border-inline-end:none;}
+.pch-menu-item:hover{background:rgba(var(--lv-gs,198,161,91),.1);}
+.pch-menu-item-title{font-family:'Cinzel',serif;font-size:0.9rem;color:var(--pearl-ink);}
+.pch-menu-item-desc{font-size:0.76rem;line-height:1.4;color:var(--pearl-ink-2);}
+@media (max-width:640px){
+  .pch-menu-panel{position:fixed;top:auto;bottom:0;left:0;right:0;inset-inline-end:auto;width:auto;max-height:70vh;
+    grid-template-columns:1fr;border-radius:16px 16px 0 0;}
+  .pch-menu-item{border-inline-end:none!important;}
+}
+html[data-pc-theme="dark"] .pch-menu-toggle,
+html[data-pc-theme="royal"] .pch-menu-toggle{
+  color:rgba(var(--lv-p3,247,238,223),.9);border-color:rgba(233,206,138,.3);
+  background:linear-gradient(150deg,rgba(233,206,138,.14),rgba(233,206,138,.05));
+}
+html[data-pc-theme="dark"] .pch-menu-toggle:hover,
+html[data-pc-theme="royal"] .pch-menu-toggle:hover{border-color:var(--gold-bright);background:rgba(233,206,138,.16);}
+html[data-pc-theme="dark"] .pch-menu-panel,
+html[data-pc-theme="royal"] .pch-menu-panel{
+  background-image:
+    linear-gradient(rgba(26,18,9,.68),rgba(26,18,9,.68)),
+    linear-gradient(calc(100deg + (var(--gx,50) - 50) * 0.6deg),#8a6a2e 0%,#c6a15b 20%,#f3e3b8 38%,#fffdf6 52%,#e9ce8a 68%,#c6a15b 84%,#e9ce8a 100%);
+  box-shadow:0 30px 60px -24px rgba(0,0,0,.6),0 10px 24px -12px rgba(0,0,0,.4),inset 0 1px 0 rgba(233,206,138,.14);
+}
+html[data-pc-theme="dark"] .pch-menu-item,
+html[data-pc-theme="royal"] .pch-menu-item{border-color:rgba(233,206,138,.18);}
+html[data-pc-theme="dark"] .pch-menu-item:hover,
+html[data-pc-theme="royal"] .pch-menu-item:hover{background:rgba(233,206,138,.1);}
+html[data-pc-theme="dark"] .pch-menu-item-title,
+html[data-pc-theme="royal"] .pch-menu-item-title{color:#FFF6DF;}
+html[data-pc-theme="dark"] .pch-menu-item-desc,
+html[data-pc-theme="royal"] .pch-menu-item-desc{color:rgba(var(--lv-p3,247,238,223),.68);}
 html[data-pc-theme="dark"] .portal-logout,
 html[data-pc-theme="royal"] .portal-logout{
   border:1px solid rgba(233,206,138,.55)!important;

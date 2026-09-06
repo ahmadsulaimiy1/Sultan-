@@ -18,9 +18,9 @@
 <script src="/js/i18n.js?v=9056340187" defer></script>
 <script src="/js/portal-shell.js?v=4cccdbf1a2"></script>
 <link rel="stylesheet" href="/css/clock.css?v=46b07f8c17">
-<link rel="stylesheet" href="/css/portal-chrome.css?v=95c950f310">
+<link rel="stylesheet" href="/css/portal-chrome.css?v=0a30552ff2">
 <link rel="stylesheet" href="/css/portal-command.css?v=c1dbf3d44d">
-<meta name="shrs-build" content="shrs-pwa-07bdb86fb5">
+<meta name="shrs-build" content="shrs-pwa-e6c40d7e67">
 </head>
 <body class="portal-body type-administrative" data-atmosphere="executive">
 
@@ -31,9 +31,13 @@
   </a>
   <div style="display:flex;align-items:center;gap:14px;">
     <span class="portal-pilot-badge">Graduation Approval Matrix</span>
-    <a class="portal-topbar-link" href="/portal/staff/graduation-control/">Graduation Control Centre</a>
-    <a class="portal-topbar-link" href="/portal/staff/offices/" data-i18n="all-offices">All Offices</a>
-    <span class="lang-switch-mount" data-locale-switcher></span>
+    <details class="pch-menu">
+      <summary class="pch-menu-toggle" data-i18n="menu">Menu</summary>
+      <div class="pch-menu-panel">
+      <a class="pch-menu-item" href="/portal/staff/graduation-control/"><span class="pch-menu-item-title">Graduation Control Centre</span><span class="pch-menu-item-desc">Seating, regalia, and ceremony readiness, live.</span></a>
+      <a class="pch-menu-item" href="/portal/staff/offices/"><span class="pch-menu-item-title" data-i18n="all-offices">All Offices</span><span class="pch-menu-item-desc">Every office in the institution, and who holds each seat.</span></a>
+      </div>
+    </details><span class="lang-switch-mount" data-locale-switcher></span>
     <button type="button" class="portal-logout" data-portal-logout data-i18n="sign-out">Sign Out</button>
   </div>
 </div>
