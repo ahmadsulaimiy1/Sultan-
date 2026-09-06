@@ -208,9 +208,16 @@
   }
 
   /* ---- magnetic buttons ---- */
+  // .pfd-action-btn (the portal's dashboard-section action pills) is
+  // included alongside the site's own .mo-mag opt-in: it's the same
+  // auto-width-pill-in-a-wrapping-flex-row shape as the marketing .btn
+  // CTAs .mo-mag already enhances elsewhere, with real whitespace around
+  // it to pull into. A full-width button like .portal-submit was
+  // deliberately left out of this — a magnetic pull reads as a glitch on
+  // something that already fills its container edge to edge.
   function initMagnetic() {
     if (reduce || !hasHover) return;
-    document.querySelectorAll('.mo-mag').forEach(function (btn) {
+    document.querySelectorAll('.mo-mag, .pfd-action-btn').forEach(function (btn) {
       var raf = null, dx = 0, dy = 0;
       function apply() {
         raf = null;
