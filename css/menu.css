@@ -134,9 +134,9 @@
      livery uses. More specific selector than .navlinks alone, so it
      wins without needing !important on top of the rule already here. */
   [data-pc-livery="pearl"] .navlinks{
-    --fm-plate-bg:linear-gradient(158deg,#8C2A3C 0%,#7C1F2E 100%);
+    --fm-plate-bg:linear-gradient(158deg,#8C2A3C 0%,#6E2622 100%);
     --fm-plate-ink:#FFFFFF;
-    --fm-plate-edge:rgba(124,31,46,.55);
+    --fm-plate-edge:rgba(110,38,34,.55);
   }
 
   /* ---------- The sheet ----------

@@ -379,7 +379,7 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
 .portal-submit:active{transform:translateY(0);}
 .portal-submit:disabled{opacity:0.6;cursor:default;transform:none;box-shadow:none;}
 .portal-error{
-  background:rgba(124,31,46,0.08);border:1px solid var(--crimson);border-radius:6px;color:var(--crimson);
+  background:rgba(110,38,34,0.08);border:1px solid var(--crimson);border-radius:6px;color:var(--crimson);
   font-size:0.82rem;padding:10px 13px;margin-bottom:16px;display:none;
 }
 .portal-error.is-visible{display:block;}
@@ -619,7 +619,7 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
 .pjl-swatch.is-verified{background:var(--navy-bg);border-color:var(--navy-bg);}
 
 .portal-ijazah-card{border:1px solid var(--gold);border-inline-start:3px solid var(--gold);padding:12px 14px;margin-top:10px;background:rgba(var(--lv-gs,198,161,91),0.06);}
-.portal-ijazah-card.is-revoked{border-color:var(--crimson);border-inline-start-color:var(--crimson);background:rgba(124,31,46,0.05);}
+.portal-ijazah-card.is-revoked{border-color:var(--crimson);border-inline-start-color:var(--crimson);background:rgba(110,38,34,0.05);}
 .pij-ref{font-family:'Cinzel','Amiri',serif;font-size:0.78rem;color:var(--portal-heading);}
 .pij-scope{font-size:0.88rem;margin-top:2px;}
 .pij-meta{font-size:0.76rem;color:var(--ink-soft);margin-top:4px;}
@@ -901,7 +901,7 @@ select.registrar-search-row-select{
   background-repeat:no-repeat;background-size:16px;background-position:right 12px center;
 }
 [dir="rtl"] select.registrar-search-row-select{background-position:left 12px center;padding-inline-end:14px;padding-inline-start:38px;}
-.registrar-search-error{background:rgba(124,31,46,0.08);border:1px solid var(--crimson);color:var(--crimson);font-size:0.82rem;padding:9px 12px;margin:0 20px 16px;border-radius:var(--pr-r-xs,6px);}
+.registrar-search-error{background:rgba(110,38,34,0.08);border:1px solid var(--crimson);color:var(--crimson);font-size:0.82rem;padding:9px 12px;margin:0 20px 16px;border-radius:var(--pr-r-xs,6px);}
 .registrar-hint{font-size:0.8rem;color:var(--ink-soft);padding:0 20px;margin:14px 0;line-height:1.6;}
 /* Safeguarding Intelligence Framework — Institutional Capability
    Framework presentation pattern ("Operational Framework Ready" +
@@ -955,10 +955,10 @@ select.registrar-search-row-select{
 [dir="rtl"] .registrar-form-grid .portal-field select{background-position:left 12px center;padding-inline-end:14px;padding-inline-start:38px;}
 .registrar-form-submit{grid-column:1 / -1;width:auto;padding:13px 28px;}
 .registrar-btn-danger{background:var(--crimson);border-color:var(--crimson);color:#fff;}
-.registrar-btn-danger:hover{background:#7a2534;border-color:#7a2534;box-shadow:0 10px 22px -12px rgba(124,31,46,.55);}
+.registrar-btn-danger:hover{background:#7a2534;border-color:#7a2534;box-shadow:0 10px 22px -12px rgba(110,38,34,.55);}
 .registrar-form-result{margin:0 20px 20px;padding:12px 16px;font-size:0.84rem;border-radius:var(--pr-r-sm,8px);}
 .registrar-form-result.is-ok{background:rgba(var(--lv-gs,198,161,91),0.12);border:1px solid var(--gold);color:var(--portal-heading);}
-.registrar-form-result.is-error{background:rgba(124,31,46,0.08);border:1px solid var(--crimson);color:var(--crimson);}
+.registrar-form-result.is-error{background:rgba(110,38,34,0.08);border:1px solid var(--crimson);color:var(--crimson);}
 .registrar-cert-issued{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
 .registrar-cert-issued-text{flex:1;min-width:200px;line-height:1.6;}
 /* A framed plate, not a bare bordered box — the same soft-shadow/bevel
@@ -977,7 +977,7 @@ select.registrar-search-row-select{
 .graduation-status-badge.is-locked{color:var(--forest-green,#2f6b46);border-color:var(--forest-green,#2f6b46);}
 .graduation-status-badge.is-verified{color:var(--forest-green,#2f6b46);border-color:var(--forest-green,#2f6b46);}
 .graduation-status-badge.is-under_review{color:var(--gold);border-color:var(--gold);}
-.graduation-correction-banner{margin:0 20px 16px;padding:12px 14px;background:rgba(124,31,46,0.08);border:1px solid var(--crimson);color:var(--crimson);font-size:0.86rem;line-height:1.5;}
+.graduation-correction-banner{margin:0 20px 16px;padding:12px 14px;background:rgba(110,38,34,0.08);border:1px solid var(--crimson);color:var(--crimson);font-size:0.86rem;line-height:1.5;}
 .graduation-readonly-note{margin:0 20px 20px;padding:12px 14px;background:rgba(var(--lv-gs,198,161,91),0.1);border:1px solid var(--gold);color:var(--portal-heading);font-size:0.86rem;line-height:1.5;}
 .graduation-section-head{font-family:'Cinzel','Amiri',serif;font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--portal-heading);border-bottom:1px solid var(--line);padding-bottom:6px;margin:18px 0 4px;}
 .graduation-form .registrar-field-wide:first-child.graduation-section-head{margin-top:4px;}
@@ -1000,10 +1000,10 @@ select.registrar-search-row-select{
 .gcc-progress-track{width:80px;height:6px;background:var(--line);border-radius:3px;overflow:hidden;display:inline-block;vertical-align:middle;margin-inline-end:6px;}
 .gcc-progress-fill{height:100%;background:var(--gold);}
 .gcc-empty-row td{text-align:center;color:var(--ink-soft);font-style:italic;padding:20px;}
-.gcc-finance-signal{margin:0 20px 16px;padding:12px 14px;background:rgba(124,31,46,0.06);border:1px solid var(--crimson);font-size:0.82rem;color:var(--ink);}
+.gcc-finance-signal{margin:0 20px 16px;padding:12px 14px;background:rgba(110,38,34,0.06);border:1px solid var(--crimson);font-size:0.82rem;color:var(--ink);}
 .gcc-finance-signal strong{color:var(--crimson);}
 .gcc-signal-chip{padding:10px 14px;font-size:0.78rem;color:var(--ink);background:rgba(var(--lv-gs,198,161,91),0.08);border:1px solid var(--gold);border-radius:3px;}
-.gcc-signal-chip.is-warn{background:rgba(124,31,46,0.06);border-color:var(--crimson);color:var(--crimson);}
+.gcc-signal-chip.is-warn{background:rgba(110,38,34,0.06);border-color:var(--crimson);color:var(--crimson);}
 .gcc-timeline{display:flex;flex-direction:column;}
 .gcc-stage-row{display:flex;gap:14px;position:relative;padding-bottom:20px;}
 .gcc-stage-row:last-child{padding-bottom:0;}
@@ -1037,7 +1037,7 @@ select.registrar-search-row-select{
 .transcript-table{width:100%;border-collapse:collapse;font-size:var(--small-size);}
 .transcript-table th,.transcript-table td{padding:8px 10px;text-align:start;border-bottom:1px solid var(--line);}
 .transcript-table th{font-family:'Cinzel','Amiri',serif;font-size:var(--caption-size);text-transform:uppercase;letter-spacing:0.06em;color:var(--on-surface-soft);}
-.transcript-unavailable{padding:var(--space-md);background:rgba(124,31,46,0.05);border:1px dashed rgba(124,31,46,0.35);border-radius:var(--radius-md);font-size:var(--small-size);color:var(--ink-soft);margin-top:var(--space-sm);}
+.transcript-unavailable{padding:var(--space-md);background:rgba(110,38,34,0.05);border:1px dashed rgba(110,38,34,0.35);border-radius:var(--radius-md);font-size:var(--small-size);color:var(--ink-soft);margin-top:var(--space-sm);}
 .transcript-average-row td{font-weight:700;background:rgba(var(--lv-gs,198,161,91),0.08);border-top:2px solid var(--gold);}
 .pij-ref a{color:inherit;text-decoration:underline;text-decoration-style:dotted;}
 .pij-ref a:hover{color:var(--gold);}
@@ -1104,7 +1104,7 @@ select.registrar-search-row-select{
 .registrar-approval-approve{background:var(--forest-green, #2f6b46);border:1px solid var(--forest-green, #2f6b46);color:#fff;padding:8px 18px;border-radius:var(--pr-r-pill,999px);font-size:0.82rem;font-weight:600;cursor:pointer;transition:transform .3s ease,box-shadow .3s ease;}
 .registrar-approval-approve:hover{transform:translateY(-2px);box-shadow:0 10px 22px -12px rgba(47,107,70,.5);}
 .registrar-approval-reject{background:var(--crimson);border:1px solid var(--crimson);color:#fff;padding:8px 18px;border-radius:var(--pr-r-pill,999px);font-size:0.82rem;font-weight:600;cursor:pointer;transition:transform .3s ease,box-shadow .3s ease;}
-.registrar-approval-reject:hover{transform:translateY(-2px);box-shadow:0 10px 22px -12px rgba(124,31,46,.5);}
+.registrar-approval-reject:hover{transform:translateY(-2px);box-shadow:0 10px 22px -12px rgba(110,38,34,.5);}
 .registrar-approvals-empty{padding:8px 20px 16px;color:var(--ink-soft);font-size:0.86rem;font-style:italic;}
 
 /* Certificate Centre roster preview, batch register, and certificate

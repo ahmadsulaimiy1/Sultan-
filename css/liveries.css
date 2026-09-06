@@ -561,7 +561,7 @@
    the gold/coffee-brown identity made brighter and richer rather than
    held at Royal's more muted weight. Corrected after a first pass that
    overcorrected the founder's brief for a deliberate crimson accent
-   into rotating the whole gold family onto --crimson (#7C1F2E) — gold
+   into rotating the whole gold family onto --crimson (#6E2622) — gold
    stays gold here. The crimson accent itself lives separately, scoped
    to specific components (primary CTAs, the Personalisation accent
    slot) under [data-pc-livery="pearl"] in css/brand.css, not baked
