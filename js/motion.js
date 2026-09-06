@@ -117,6 +117,19 @@
      safety property the Founder page's own version already has. */
   function initSectionReveal() {
     if (reduce || !('IntersectionObserver' in window)) return;
+    // Founder's dashboard ships its own older, more elaborate scroll-reveal
+    // (an arrival-sequence-aware version with a fast-scroll settle-check
+    // this generic one doesn't have) that reads and writes the exact same
+    // js-scroll-pending/js-scroll-in classes on the exact same .pfd-section
+    // elements. Running both would mean two IntersectionObservers doing
+    // duplicate work on one page, and — since Founder's own version
+    // unconditionally re-adds js-scroll-pending without checking whether a
+    // section is already revealed — a real risk of this generic observer
+    // revealing a section first, only for Founder's to briefly hide it
+    // again. Its script tag is present in the DOM (deferred scripts still
+    // parse before DOMContentLoaded) whether or not it has run yet, so
+    // this is a reliable, zero-coupling way to yield to it.
+    if (document.querySelector('script[src*="portal-founder-dashboard.js"]')) return;
     var sections = document.querySelectorAll('.pfd-section');
     if (!sections.length) return;
     var io = new IntersectionObserver(function (entries, obs) {
