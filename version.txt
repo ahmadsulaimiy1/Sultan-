@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      b7de1050c15ed148fd093678512db32031b66940
-short       b7de1050
-branch      claude/true-white-header-footer
-subject     Turn cream/coffee-brown chrome to platinum white, invalidate stale personalisation
-built (UTC) 2026-09-06T07:17:01Z
-assets      shrs-pwa-71359620e1
+commit      50eb1f5abaceea241ec8ac2a4c659dd9f7d21889
+short       50eb1f5a
+branch      claude/elegant-red-not-crimson
+subject     Deepen the red accent toward oxblood, revert gold-to-red on the six-doors cards
+built (UTC) 2026-09-06T07:38:59Z
+assets      shrs-pwa-526a3e6fa1
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run
