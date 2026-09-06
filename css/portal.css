@@ -1959,12 +1959,19 @@ body.portal-body[data-atmosphere] .pfd-section::before{background:linear-gradien
    corner box, not across the hero. Setting variables on the element
    itself has no such box to fight over. */
 body.portal-body[data-atmosphere] .exec-welcome{
-  border-color:var(--atmos);
   --lattice-glow: color-mix(in srgb, var(--atmos-bright) 45%, transparent);
   --lattice-line: color-mix(in srgb, var(--atmos-bright) 35%, transparent);
 }
-body.portal-body[data-atmosphere] .exec-welcome-eyebrow{color:var(--atmos-bright);}
-body.portal-body[data-atmosphere] .exec-welcome-stat .value{color:var(--atmos-bright);}
+/* border-color and the eyebrow/stat-value text colour are deliberately
+   NOT overridden here (a real bug found in mobile QA: this selector's
+   specificity was beating the foil border-box/padding-box trick and the
+   foil background-clip:text trick on .exec-welcome-eyebrow/.value,
+   replacing both with a flat --atmos-bright colour on every dashboard
+   except Founder's, whose atmosphere colour happens to already be gold).
+   The gold-foil welcome banner is the one shared flagship signature every
+   dashboard carries; each office's own colour still comes through
+   plainly via the topbar border, tab underline, card-hover border, aside
+   eyebrow, atmosphere icon, and the lattice glow above. */
 body.portal-body[data-atmosphere] .portal-child-card{transition:border-color .25s ease,transform .25s ease,box-shadow .25s ease;}
 body.portal-body[data-atmosphere] .portal-child-card:hover{
   border-color:var(--atmos);transform:translateY(-3px);

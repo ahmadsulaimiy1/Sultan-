@@ -279,6 +279,59 @@
     });
   }
 
+  // The .pch-menu-panel grid is anchored to its toggle's start edge (see
+  // css/portal-chrome.css) because that toggle sits in different spots on
+  // different pages' topbars — sometimes with room to spare, sometimes
+  // hard against the far-right utility cluster. A fixed CSS anchor can
+  // only be right for some of those pages; real-device QA found the
+  // panel running past the viewport's right edge on ones where the
+  // toggle sits close to it (clipped invisibly by html/body's sitewide
+  // overflow-x:clip in css/brand.css, not scrollable into view). This
+  // measures the open panel against the real viewport each time and
+  // nudges it back in with a margin, on whichever side it overflows.
+  // margin-left, not transform: the panel's own materialize keyframe
+  // animates transform with fill-mode "both", so its end value (none)
+  // sticks in the cascade's animation layer and silently overrides any
+  // transform set from JS afterwards — the same class of bug as the
+  // tilt-vs-hover fix elsewhere in this file, different property.
+  function initMenuPanelClamp() {
+    var menus = document.querySelectorAll('.pch-menu');
+    if (!menus.length) return;
+    function clamp(panel) {
+      panel.style.marginLeft = '';
+      // Two passes: the first corrects the (unshifted) overflow, but
+      // shifting the box changes its own rect, so one more measurement
+      // against the now-shifted position catches any remainder exactly
+      // rather than trusting a single linear estimate.
+      for (var i = 0; i < 2; i++) {
+        var rect = panel.getBoundingClientRect();
+        var vw = document.documentElement.clientWidth;
+        var overflowRight = rect.right - (vw - 12);
+        var overflowLeft = 12 - rect.left;
+        var current = parseFloat(panel.style.marginLeft) || 0;
+        if (overflowRight > 0) panel.style.marginLeft = (current - overflowRight) + 'px';
+        else if (overflowLeft > 0) panel.style.marginLeft = (current + overflowLeft) + 'px';
+        else break;
+      }
+    }
+    menus.forEach(function (menu) {
+      var panel = menu.querySelector('.pch-menu-panel');
+      if (!panel) return;
+      menu.addEventListener('toggle', function () {
+        if (!menu.open) return;
+        // An immediate best-effort pass (the panel is still mid-materialize
+        // here — its entrance keyframe scales up from .96 — so this can
+        // undershoot slightly), then the authoritative one once that
+        // animation actually finishes and the box is at its real size.
+        requestAnimationFrame(function () { clamp(panel); });
+        panel.addEventListener('animationend', function () { clamp(panel); }, { once: true });
+      });
+      window.addEventListener('resize', function () {
+        if (menu.open) clamp(panel);
+      }, { passive: true });
+    });
+  }
+
   function init() {
     initReveal();
     initSectionReveal();
@@ -288,6 +341,7 @@
     initSpotlight();
     initMagnetic();
     initTilt();
+    initMenuPanelClamp();
   }
 
   if (document.readyState === 'loading') {
