@@ -104,6 +104,36 @@
     targets.forEach(function (t) { io.observe(t); });
   }
 
+  /* ---- dashboard section reveal, sitewide ----
+     js/portal-founder-dashboard.js already does exactly this for the
+     Founder page alone (its own setupScrollReveal, added when that
+     page's real data resolves). Reusing the identical CSS contract
+     (.js-scroll-pending / .js-scroll-in / @keyframes pfd-scroll-reveal,
+     already defined once in css/portal.css) here makes every other
+     dashboard's .pfd-section cards stagger in on scroll too, instead of
+     that being one page's bespoke feature. Classes are only ever ADDED
+     by script, never a default hidden state in CSS, so a page where
+     this script fails to load still shows its content — the same
+     safety property the Founder page's own version already has. */
+  function initSectionReveal() {
+    if (reduce || !('IntersectionObserver' in window)) return;
+    var sections = document.querySelectorAll('.pfd-section');
+    if (!sections.length) return;
+    var io = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.remove('js-scroll-pending');
+        e.target.classList.add('js-scroll-in');
+        obs.unobserve(e.target);
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+    sections.forEach(function (s) {
+      if (s.classList.contains('js-scroll-in')) return;
+      s.classList.add('js-scroll-pending');
+      io.observe(s);
+    });
+  }
+
   /* ---- idle float: desynchronise a grid so it breathes, not pulses ---- */
   function initFloat() {
     if (reduce) return;
@@ -245,6 +275,7 @@
 
   function init() {
     initReveal();
+    initSectionReveal();
     initRake();
     initFloat();
     initScroll();
