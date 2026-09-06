@@ -2074,7 +2074,15 @@
     inset 0 0 0 1px rgba(var(--lv-gbs,233,206,138),.24),
     inset 0 -8px 16px -12px rgba(0,0,0,.4);
   transition:transform .5s var(--pr-ease),box-shadow .5s var(--pr-ease),border-color .5s;
-  text-decoration:none;color:inherit;display:block;}
+  text-decoration:none;color:inherit;display:block;
+  transform-style:preserve-3d;}
+/* The 3D tilt (js/motion.js initTilt) writes a fresh transform every
+   frame while the pointer moves — a .5s eased transition fighting that
+   would read as laggy rubber-banding, so the transition drops to
+   near-instant while tracking and only eases back to flat on release,
+   the same convention .mo-mag/.is-pulled already uses above. */
+.gateway-card.is-tilted{transition:box-shadow .3s ease,border-color .3s ease;will-change:transform;}
+@media (prefers-reduced-motion:reduce){.gateway-card{transform:none!important;}}
 .gateway-card:hover{transform:translateY(-9px);border-color:rgba(var(--lv-gbs,233,206,138),.45);
   box-shadow:0 4px 8px rgba(0,0,0,.35),0 40px 78px -26px rgba(0,0,0,.9),
              0 0 40px -10px rgba(var(--lv-gbs,233,206,138),.45),

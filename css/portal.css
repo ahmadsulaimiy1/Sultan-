@@ -1493,7 +1493,7 @@ html[data-pc-theme="royal"] .exec-welcome{
     linear-gradient(90deg, var(--gold) 0, var(--gold) 24px, transparent 24px),
     linear-gradient(180deg, var(--gold) 0, var(--gold) 24px, transparent 24px),
     linear-gradient(168deg, #FCFCFB 0%, #F3F4F2 55%, #E8E9E7 100%),
-    linear-gradient(100deg,
+    linear-gradient(calc(100deg + (var(--gx,50) - 50) * 0.6deg),
       #8A6A2E 0%, #C6A15B 12%, #F3E3B8 25%, #FFFDF6 35%, #E9CE8A 45%,
       #C6A15B 58%, #9A7734 68%, #E9CE8A 80%, #FBF3DF 90%, #8A6A2E 100%);
   background-origin:padding-box, padding-box, padding-box, padding-box, padding-box, padding-box, border-box;
@@ -1541,7 +1541,7 @@ html[data-pc-theme="royal"] .exec-welcome{
   .exec-welcome{background-image:
       radial-gradient(600px 200px at var(--lattice-x,-10%) -40%, rgba(233,206,138,.24), transparent 62%),
       linear-gradient(168deg, #FCFCFB 0%, #F3F4F2 55%, #E8E9E7 100%),
-      linear-gradient(100deg,
+      linear-gradient(calc(100deg + (var(--gx,50) - 50) * 0.6deg),
         #8A6A2E 0%, #C6A15B 12%, #F3E3B8 25%, #FFFDF6 35%, #E9CE8A 45%,
         #C6A15B 58%, #9A7734 68%, #E9CE8A 80%, #FBF3DF 90%, #8A6A2E 100%);
     background-origin:padding-box, padding-box, border-box;
@@ -1573,7 +1573,7 @@ html[data-pc-theme="royal"] .exec-welcome{
    the stat figures read as struck gold rather than brown-gold ink. */
 .exec-welcome-eyebrow{
   font-size:0.8rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;
-  background-image:linear-gradient(100deg,#8A6A2E 0%,#C6A15B 20%,#F3E3B8 38%,#E9CE8A 52%,#C6A15B 68%,#9A7734 82%,#E9CE8A 100%);
+  background-image:linear-gradient(calc(100deg + (var(--gx,50) - 50) * 0.6deg),#8A6A2E 0%,#C6A15B 20%,#F3E3B8 38%,#E9CE8A 52%,#C6A15B 68%,#9A7734 82%,#E9CE8A 100%);
   -webkit-background-clip:text;background-clip:text;color:transparent;
 }
 .exec-welcome h1{font-family:'Cinzel','Amiri',serif;font-size:1.55rem;line-height:1.15;margin:0 0 12px;color:#1E1811;position:relative;padding-bottom:8px;}
@@ -1603,7 +1603,7 @@ html[data-pc-theme="royal"] .exec-welcome{
 .exec-welcome-stat{display:flex;flex-direction:column;}
 .exec-welcome-stat .value{
   font-family:'Cinzel','Amiri',serif;font-size:1.4rem;font-weight:700;
-  background-image:linear-gradient(100deg,#8A6A2E 0%,#C6A15B 20%,#F3E3B8 38%,#E9CE8A 52%,#C6A15B 68%,#9A7734 82%,#E9CE8A 100%);
+  background-image:linear-gradient(calc(100deg + (var(--gx,50) - 50) * 0.6deg),#8A6A2E 0%,#C6A15B 20%,#F3E3B8 38%,#E9CE8A 52%,#C6A15B 68%,#9A7734 82%,#E9CE8A 100%);
   -webkit-background-clip:text;background-clip:text;color:transparent;
 }
 .exec-welcome-stat .label{font-size:0.74rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--pearl-ink-2,#57472f);}
@@ -2776,10 +2776,37 @@ html[data-pc-theme="dark"] .pr-section.gw-band.is-ivory{
 }
 .office-switcher-toggle:hover{border-color:var(--gold);}
 .osw-caret{font-size:0.6rem;color:var(--gold);}
+/* Genuine glass, scoped deliberately — this is a transient overlay that
+   sits ABOVE the page and disappears the moment it's not needed, the
+   exact opposite case from .gateway-card/.portal-child-card (both
+   permanent, text-bearing surfaces where backdrop-blur was tried twice
+   already and reverted both times for reading hazy). A floating menu
+   blurring what's behind it is the one place this codebase's own
+   documented "no glass" rule doesn't apply — nothing needs to stay
+   crisp behind a panel that's about to close. */
 .office-switcher-menu{
-  position:absolute;top:calc(100% + 6px);inset-inline-end:0;min-width:260px;max-width:340px;
-  background:var(--portal-card);border:1px solid var(--line);border-top:3px solid var(--gold);
-  box-shadow:0 8px 24px rgba(var(--lv-w57,20,20,10),0.14);z-index:40;max-height:70vh;overflow-y:auto;
+  position:absolute;top:calc(100% + 10px);inset-inline-end:0;min-width:270px;max-width:340px;
+  background:rgba(255,255,255,.72);backdrop-filter:blur(22px) saturate(1.7);-webkit-backdrop-filter:blur(22px) saturate(1.7);
+  border:2px solid transparent;
+  background-image:
+    linear-gradient(rgba(255,255,255,.72),rgba(255,255,255,.72)),
+    linear-gradient(calc(100deg + (var(--gx,50) - 50) * 0.6deg),#8a6a2e 0%,#c6a15b 20%,#f3e3b8 38%,#fffdf6 52%,#e9ce8a 68%,#c6a15b 84%,#e9ce8a 100%);
+  background-origin:padding-box,border-box;background-clip:padding-box,border-box;
+  border-radius:14px;
+  box-shadow:0 30px 60px -24px rgba(20,13,4,.35),0 10px 24px -12px rgba(20,13,4,.2),inset 0 1px 0 rgba(255,255,255,.9);
+  z-index:40;max-height:70vh;overflow-y:auto;
+  animation:osw-materialize .22s cubic-bezier(.2,.9,.3,1) both;
+  transform-origin:top right;
+}
+[dir="rtl"] .office-switcher-menu{transform-origin:top left;}
+@keyframes osw-materialize{from{opacity:0;transform:scale(.96) translateY(-4px);}to{opacity:1;transform:none;}}
+@media (prefers-reduced-motion:reduce){.office-switcher-menu{animation:none;}}
+html[data-pc-theme="dark"] .office-switcher-menu,
+html[data-pc-theme="royal"] .office-switcher-menu{
+  background-image:
+    linear-gradient(rgba(26,18,9,.68),rgba(26,18,9,.68)),
+    linear-gradient(calc(100deg + (var(--gx,50) - 50) * 0.6deg),#8a6a2e 0%,#c6a15b 20%,#f3e3b8 38%,#fffdf6 52%,#e9ce8a 68%,#c6a15b 84%,#e9ce8a 100%);
+  box-shadow:0 30px 60px -24px rgba(0,0,0,.6),0 10px 24px -12px rgba(0,0,0,.4),inset 0 1px 0 rgba(233,206,138,.14);
 }
 .osw-heading{font-size:0.66rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-soft);padding:12px 16px 8px;}
 .osw-item{display:flex;flex-direction:column;gap:2px;padding:10px 16px;text-decoration:none;border-top:1px solid var(--line);}

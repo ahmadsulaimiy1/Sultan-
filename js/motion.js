@@ -210,6 +210,39 @@
     }, { passive: true });
   }
 
+  /* ---- 3D tilt toward the cursor ----
+     A genuine perspective tilt (not a flat hover lift) on the surfaces
+     that most deserve to feel like an object rather than a rectangle —
+     the gateway doors, the executive hero. Bounded to a few degrees so
+     it reads as "responsive metal," not a gimmick; the existing gold
+     -edge/foil treatments already ride along for free since they're
+     drawn on the same element. No new markup: targets .gateway-card
+     and .mo-tilt directly, same convention as .mo-spot/.mo-mag above. */
+  function initTilt() {
+    if (reduce || !hasHover) return;
+    document.querySelectorAll('.gateway-card, .mo-tilt').forEach(function (card) {
+      var raf = null, rx = 0, ry = 0;
+      var max = parseFloat(card.getAttribute('data-tilt') || '5');
+      function apply() {
+        raf = null;
+        card.style.transform = 'perspective(900px) translateY(-9px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg)';
+      }
+      card.addEventListener('pointermove', function (e) {
+        var r = card.getBoundingClientRect();
+        var px = (e.clientX - r.left) / r.width;
+        var py = (e.clientY - r.top) / r.height;
+        ry = (px - 0.5) * (max * 2);
+        rx = (0.5 - py) * (max * 2);
+        card.classList.add('is-tilted');
+        if (raf === null) raf = requestAnimationFrame(apply);
+      }, { passive: true });
+      card.addEventListener('pointerleave', function () {
+        card.classList.remove('is-tilted');
+        card.style.transform = '';
+      });
+    });
+  }
+
   function init() {
     initReveal();
     initRake();
@@ -217,6 +250,7 @@
     initScroll();
     initSpotlight();
     initMagnetic();
+    initTilt();
   }
 
   if (document.readyState === 'loading') {
