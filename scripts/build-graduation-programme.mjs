@@ -286,8 +286,17 @@ function lathe(id, w, h, cycles, stroke, dark = false) {
 }
 
 // ── FIXTURES ────────────────────────────────────────────────────────────────
-const crest = (h, cls = '') => `<img class="crest ${cls}" style="height:${h}mm"
-  src="/assets/images/crests/shrs-institutional-crest.png" alt="" />`;
+// The crest is inlined as vector, not linked as a raster: it has to stay sharp
+// at 17mm on a folded panel and at any size a future artefact asks for, and it
+// carries no colour of its own so one file serves gold on cream and gold
+// reversed out of the espresso panels. Built by scripts/build-crest-vector.py
+// and measured by scripts/verify-crest-vector.py.
+const CREST_SVG = readFileSync(
+  'assets/images/crests/shrs-institutional-crest.svg', 'utf8')
+  .replace(/^<svg /, '<svg preserveAspectRatio="xMidYMid meet" ');
+
+const crest = (h, cls = '') =>
+  `<span class="crest ${cls}" style="height:${h}mm">${CREST_SVG}</span>`;
 
 const rule = (cls = '') => `<div class="rule ${cls}"><span></span><i></i><span></span></div>`;
 const star = (cls = '') => `<div class="star ${cls}"><b></b></div>`;
@@ -625,7 +634,7 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .pad{padding:9mm 8mm 8mm;min-height:100%}
 /* The welcome panel's pad starts below a 54mm hero. */
 .p-w .pad{min-height:calc(100% - 54mm)}
-.crest{display:block;margin:0 auto;width:auto;object-fit:contain}
+.crest{display:block;margin:0 auto;width:auto;color:var(--gold)}.crest svg{display:block;height:100%;width:auto}
 .rule{display:flex;align-items:center;gap:2mm;margin:2.4mm 0}
 .rule span{flex:1;height:.22mm;background:linear-gradient(90deg,rgba(168,134,63,0),var(--gold))}
 .rule span:last-child{background:linear-gradient(270deg,rgba(168,134,63,0),var(--gold))}
